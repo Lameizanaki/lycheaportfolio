@@ -667,14 +667,6 @@ img {
   gap: 1.5rem;
 }
 
-.modal-header span {
-  display: inline-block;
-  margin-bottom: 0.35rem;
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
 .modal-header h2 {
   margin: 0;
   font-family: var(--display);

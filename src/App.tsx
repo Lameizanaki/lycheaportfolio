@@ -66,8 +66,9 @@ type FormStatus = "idle" | "sending" | "sent" | "error";
 
 const contactEmail = "lycheacheurn@gmail.com";
 const contactPhoneDisplay = "+(855) 98729790";
-const contactPhoneHref = "+85598729790";
 const contactTelegram = "http://T.me/lycheacheurn";
+const contactTikTok =
+  "https://www.tiktok.com/@lycheacheurn?_r=1&_t=ZS-9802S1iDHdZ";
 
 const navItems: NavItem[] = [
   { id: "hero", label: "Home" },
@@ -786,7 +787,6 @@ function PortfolioModal({
       >
         <div className="modal-header">
           <div>
-            <span>{activeImage.kind}</span>
             <h2 id="project-modal-title">{project.title}</h2>
             <p>{project.summary}</p>
           </div>
@@ -910,13 +910,13 @@ function Contact() {
               <Mail aria-hidden="true" />
               {contactEmail}
             </a>
-            <a href={`tel:${contactPhoneHref}`}>
+            <a href={contactTelegram} target="_blank" rel="noreferrer">
               <Phone aria-hidden="true" />
               {contactPhoneDisplay}
             </a>
-            <a href={contactTelegram} target="_blank" rel="noreferrer">
+            <a href={contactTikTok} target="_blank" rel="noreferrer">
               <Send aria-hidden="true" />
-              Telegram
+              TikTok
             </a>
             <span>
               <MapPin aria-hidden="true" />

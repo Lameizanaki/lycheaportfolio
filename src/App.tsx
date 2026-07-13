@@ -606,40 +606,32 @@ function Skills() {
   return (
     <section id="skills" className="skills-section">
       <div className="personal-skills section-block">
-        <Reveal className="personal-copy" direction="left">
-          <SkillList items={personalSkills} />
+        <Reveal className="personal-copy skill-heading" direction="left">
           <h2>Personal skills</h2>
         </Reveal>
-        <Reveal className="personal-image" delay={0.12} direction="right">
+        <Reveal className="personal-image skill-media-stack" delay={0.12} direction="right">
           <AssetImage
             src={croppedImage("3.png")}
             alt="Material and color selection"
             className="wide-image"
             tone="blue"
           />
+          <SkillList items={personalSkills} />
         </Reveal>
       </div>
 
       <div className="work-skills section-block">
-        <Reveal className="work-media" direction="left">
+        <Reveal className="work-media skill-heading" direction="left">
           <h2>Work skills</h2>
-          <div className="work-image-row">
-            <AssetImage
-              src={croppedImage("2.png")}
-              alt="Interior materials"
-              className="work-image-large"
-              tone="warm"
-            />
-            <AssetImage
-              src={croppedImage("7.png")}
-              alt="Interior technical drawing"
-              className="work-image-small"
-              tone="paper"
-            />
-          </div>
         </Reveal>
 
-        <Reveal className="work-copy" delay={0.14} direction="right">
+        <Reveal className="work-copy skill-media-stack" delay={0.14} direction="right">
+          <AssetImage
+            src={croppedImage("7.png")}
+            alt="Interior technical drawing"
+            className="wide-image"
+            tone="paper"
+          />
           <SkillList items={workSkills} />
           <a className="arrow-button arrow-button--small" href="#portfolio" aria-label="Go to portfolio" title="Portfolio">
             <ArrowRight aria-hidden="true" />

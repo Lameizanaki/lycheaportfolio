@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.git/
+.env
+.env.local
+public/UI/
+public/images/[0-9]*.png

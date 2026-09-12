@@ -1,6 +1,7 @@
 import {
   useEffect,
   useMemo,
+  useRef,
   useState,
   type FormEvent,
   type ReactNode,
@@ -412,55 +413,90 @@ function Portfolio({
   projects: Project[];
   onOpenProject: (project: Project) => void;
 }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollByAmount = (amount: number) => {
+    scrollRef.current?.scrollBy({ left: amount, behavior: "smooth" });
+  };
+
+  const renderCard = (project: Project, index: number) => {
+    const hasModal = project.images.length > 0;
+
+    return (
+      <Reveal key={project.id} className="project-card" delay={(index % 4) * 0.06}>
+        {hasModal ? (
+          <motion.button
+            className="project-open"
+            type="button"
+            onClick={() => onOpenProject(project)}
+            whileHover={{ y: -8 }}
+            whileTap={{ scale: 0.985 }}
+            aria-label={`Open ${project.title} gallery`}
+          >
+            <AssetImage
+              src={project.coverImage}
+              alt={project.title}
+              className="project-image"
+              tone={index % 2 === 0 ? "sage" : "paper"}
+            />
+            <span className="project-hover" aria-hidden="true">
+              <ArrowUpRight />
+            </span>
+          </motion.button>
+        ) : (
+          <motion.div className="project-static" whileHover={{ y: -4 }}>
+            <AssetImage
+              src={project.coverImage}
+              alt={project.title}
+              className="project-image"
+              tone={index % 2 === 0 ? "sage" : "paper"}
+            />
+          </motion.div>
+        )}
+        <h3>{project.title}</h3>
+      </Reveal>
+    );
+  };
+
+  const topRow = projects.filter((_, index) => index % 2 === 0);
+  const bottomRow = projects.filter((_, index) => index % 2 === 1);
+
   return (
     <section id="portfolio" className="portfolio-section section-block">
-      <Reveal className="portfolio-heading">
-        <h2>Content</h2>
-      </Reveal>
+      <div className="portfolio-heading-row">
+        <Reveal className="portfolio-heading">
+          <h2>Content</h2>
+        </Reveal>
 
-      <div className="portfolio-grid">
-        {projects.map((project, index) => {
-          const hasModal = project.images.length > 0;
-
-          return (
-            <Reveal
-              key={project.id}
-              className="project-card"
-              delay={index * 0.06}
+        {projects.length > 0 ? (
+          <div className="portfolio-scroll-buttons">
+            <button
+              className="portfolio-scroll-button"
+              type="button"
+              onClick={() => scrollByAmount(-360)}
+              aria-label="Scroll projects left"
             >
-              {hasModal ? (
-                <motion.button
-                  className="project-open"
-                  type="button"
-                  onClick={() => onOpenProject(project)}
-                  whileHover={{ y: -8 }}
-                  whileTap={{ scale: 0.985 }}
-                  aria-label={`Open ${project.title} gallery`}
-                >
-                  <AssetImage
-                    src={project.coverImage}
-                    alt={project.title}
-                    className="project-image"
-                    tone={index % 2 === 0 ? "sage" : "paper"}
-                  />
-                  <span className="project-hover" aria-hidden="true">
-                    <ArrowUpRight />
-                  </span>
-                </motion.button>
-              ) : (
-                <motion.div className="project-static" whileHover={{ y: -4 }}>
-                  <AssetImage
-                    src={project.coverImage}
-                    alt={project.title}
-                    className="project-image"
-                    tone={index % 2 === 0 ? "sage" : "paper"}
-                  />
-                </motion.div>
-              )}
-              <h3>{project.title}</h3>
-            </Reveal>
-          );
-        })}
+              <ChevronLeft aria-hidden="true" />
+            </button>
+            <button
+              className="portfolio-scroll-button"
+              type="button"
+              onClick={() => scrollByAmount(360)}
+              aria-label="Scroll projects right"
+            >
+              <ChevronRight aria-hidden="true" />
+            </button>
+          </div>
+        ) : null}
+      </div>
+
+      <div className="portfolio-scroll" ref={scrollRef}>
+        <div className="portfolio-track">
+          <div className="portfolio-row">{topRow.map((project, i) => renderCard(project, i * 2))}</div>
+          <div className="portfolio-row portfolio-row--offset">
+            {bottomRow.map((project, i) => renderCard(project, i * 2 + 1))}
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -527,20 +527,71 @@ img {
   background: var(--paper-strong);
 }
 
+.portfolio-heading-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
 .portfolio-heading h2 {
   margin-bottom: 2.3rem;
   font-size: 5.7rem;
   line-height: 0.9;
 }
 
-.portfolio-grid {
+.portfolio-scroll-buttons {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 2.3rem;
+}
+
+.portfolio-scroll-button {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2.4rem 2rem;
-  align-items: start;
+  place-items: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.portfolio-scroll-button:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.portfolio-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 1.5rem;
+  scrollbar-width: thin;
+}
+
+.portfolio-track {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  padding-right: 2rem;
+}
+
+.portfolio-row {
+  display: flex;
+  gap: 2rem;
+}
+
+.portfolio-row--offset {
+  margin-left: 8.5rem;
 }
 
 .project-card {
+  flex: 0 0 auto;
+  width: 280px;
   min-width: 0;
 }
 
@@ -1144,8 +1195,12 @@ img {
     display: none;
   }
 
-  .portfolio-grid {
-    grid-template-columns: 1fr;
+  .project-card {
+    width: 210px;
+  }
+
+  .portfolio-row--offset {
+    margin-left: 6rem;
   }
 
   .modal-backdrop {

@@ -24,6 +24,7 @@ import {
   Send,
   X,
 } from "lucide-react";
+import { fetchProjects, type Project } from "./lib/api";
 
 type NavItem = {
   id: string;
@@ -50,19 +51,11 @@ type GalleryImage = {
   src: string;
   alt: string;
   label: string;
-  kind: "Exterior" | "Render" | "Drawing";
-};
-
-type Project = {
-  id: string;
-  title: string;
-  cover: string;
-  className: string;
-  summary: string;
-  gallery?: GalleryImage[];
 };
 
 type FormStatus = "idle" | "sending" | "sent" | "error";
+
+const projectCardVariants = ["left", "right", "center", "end"] as const;
 
 const contactEmail = "lycheacheurn@gmail.com";
 const contactPhoneDisplay = "+(855) 98729790";
@@ -95,235 +88,6 @@ const workSkills = [
 const croppedImage = (filename: string) => `/images/cropped/${filename}`;
 const uploadedImage = (filename: string) =>
   `/images/${encodeURIComponent(filename)}`;
-
-const projects: Project[] = [
-  {
-    id: "chipmong",
-    title: "01 Chipmong",
-    cover: croppedImage("4.png"),
-    className: "project-card--left",
-    summary: "Master and daughter bedroom detail views and renders.",
-    gallery: [
-      {
-        src: croppedImage("4.png"),
-        alt: "Chipmong exterior",
-        label: "Exterior reference",
-        kind: "Exterior",
-      },
-      {
-        src: croppedImage("8.png"),
-        alt: "Chipmong study desk render",
-        label: "Study desk",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("9.png"),
-        alt: "Chipmong wardrobe and vanity render",
-        label: "Wardrobe detail",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("10.png"),
-        alt: "Chipmong master bedroom render",
-        label: "Master bedroom",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("11.png"),
-        alt: "Chipmong TV wall render",
-        label: "TV wall",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("13.png"),
-        alt: "Chipmong daughter bedroom render",
-        label: "Daughter bedroom",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("14.png"),
-        alt: "Chipmong daughter study desk render",
-        label: "Daughter study desk",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("15.png"),
-        alt: "Chipmong pink wardrobe render",
-        label: "Pink wardrobe",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("16.png"),
-        alt: "Chipmong hallway render",
-        label: "Bedroom hallway",
-        kind: "Render",
-      },
-    ],
-  },
-  {
-    id: "borey-angkor",
-    title: "02 Borey Angkor PP",
-    cover: croppedImage("6.png"),
-    className: "project-card--right",
-    summary: "Bedroom renders, vanity, TV wall, and bath details.",
-    gallery: [
-      {
-        src: croppedImage("6.png"),
-        alt: "Borey Angkor exterior",
-        label: "Exterior reference",
-        kind: "Exterior",
-      },
-      {
-        src: croppedImage("18.png"),
-        alt: "Borey Angkor bedroom render",
-        label: "Bedroom view",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("19.png"),
-        alt: "Borey Angkor bed and wardrobe render",
-        label: "Wardrobe view",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("20.png"),
-        alt: "Borey Angkor TV wall render",
-        label: "TV wall",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("21.png"),
-        alt: "Borey Angkor vanity render",
-        label: "Vanity",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("22.png"),
-        alt: "Borey Angkor bedroom elevation render",
-        label: "Bedroom elevation",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("23.png"),
-        alt: "Borey Angkor bedside render",
-        label: "Bedside detail",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("24.png"),
-        alt: "Borey Angkor bathroom render",
-        label: "Bathroom",
-        kind: "Render",
-      },
-    ],
-  },
-  {
-    id: "sensok-villa",
-    title: "03 Sensok Villa",
-    cover: croppedImage("5.png"),
-    className: "project-card--center",
-    summary: "Living room, hall, and kitchen interior render sets.",
-    gallery: [
-      {
-        src: croppedImage("5.png"),
-        alt: "Sensok Villa construction exterior",
-        label: "Site reference",
-        kind: "Exterior",
-      },
-      {
-        src: croppedImage("26.png"),
-        alt: "Sensok Villa living room render",
-        label: "Living room",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("27.png"),
-        alt: "Sensok Villa TV wall render",
-        label: "TV wall",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("28.png"),
-        alt: "Sensok Villa living room cabinet render",
-        label: "Cabinet wall",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("29.png"),
-        alt: "Sensok Villa red cabinet detail render",
-        label: "Cabinet detail",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("30.png"),
-        alt: "Sensok Villa red cabinet elevation render",
-        label: "Red cabinet",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("32.png"),
-        alt: "Sensok Villa hall cabinet render",
-        label: "Hall cabinet",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("33.png"),
-        alt: "Sensok Villa hallway render",
-        label: "Hallway",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("34.png"),
-        alt: "Sensok Villa floral wall render",
-        label: "Feature wall",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("35.png"),
-        alt: "Sensok Villa flower panel render",
-        label: "Flower panel",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("36.png"),
-        alt: "Sensok Villa entry wall render",
-        label: "Entry wall",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("38.png"),
-        alt: "Sensok Villa kitchen render",
-        label: "Kitchen view",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("39.png"),
-        alt: "Sensok Villa kitchen cabinet render",
-        label: "Kitchen cabinet",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("40.png"),
-        alt: "Sensok Villa cooking wall render",
-        label: "Cooking wall",
-        kind: "Render",
-      },
-      {
-        src: croppedImage("41.png"),
-        alt: "Sensok Villa sink counter render",
-        label: "Sink counter",
-        kind: "Render",
-      },
-    ],
-  },
-  {
-    id: "technical-drawing",
-    title: "04 Technical Drawing",
-    cover: croppedImage("7.png"),
-    className: "project-card--end",
-    summary: "Technical drawing reference.",
-  },
-];
 
 function useActiveSection(ids: string[]) {
   const [activeId, setActiveId] = useState(ids[0] ?? "");
@@ -643,7 +407,13 @@ function Skills() {
   );
 }
 
-function Portfolio({ onOpenProject }: { onOpenProject: (project: Project) => void }) {
+function Portfolio({
+  projects,
+  onOpenProject,
+}: {
+  projects: Project[];
+  onOpenProject: (project: Project) => void;
+}) {
   return (
     <section id="portfolio" className="portfolio-section section-block">
       <Reveal className="portfolio-heading">
@@ -652,12 +422,13 @@ function Portfolio({ onOpenProject }: { onOpenProject: (project: Project) => voi
 
       <div className="portfolio-grid">
         {projects.map((project, index) => {
-          const hasModal = Boolean(project.gallery?.length);
+          const hasModal = project.images.length > 0;
+          const variant = projectCardVariants[index % projectCardVariants.length];
 
           return (
             <Reveal
               key={project.id}
-              className={`project-card ${project.className}`}
+              className={`project-card project-card--${variant}`}
               delay={index * 0.06}
             >
               {hasModal ? (
@@ -670,7 +441,7 @@ function Portfolio({ onOpenProject }: { onOpenProject: (project: Project) => voi
                   aria-label={`Open ${project.title} gallery`}
                 >
                   <AssetImage
-                    src={project.cover}
+                    src={project.coverImage}
                     alt={project.title}
                     className="project-image"
                     tone={index % 2 === 0 ? "sage" : "paper"}
@@ -682,7 +453,7 @@ function Portfolio({ onOpenProject }: { onOpenProject: (project: Project) => voi
               ) : (
                 <motion.div className="project-static" whileHover={{ y: -4 }}>
                   <AssetImage
-                    src={project.cover}
+                    src={project.coverImage}
                     alt={project.title}
                     className="project-image"
                     tone={index % 2 === 0 ? "sage" : "paper"}
@@ -708,17 +479,27 @@ function PortfolioModal({
   const [selectedIndex, setSelectedIndex] = useState(0);
   const reduceMotion = useReducedMotion();
 
+  const gallery: GalleryImage[] = useMemo(
+    () =>
+      project?.images.map((src, index) => ({
+        src,
+        alt: `${project.title} photo ${index + 1}`,
+        label: `Image ${index + 1}`,
+      })) ?? [],
+    [project],
+  );
+
   useEffect(() => {
     setSelectedIndex(0);
   }, [project?.id]);
 
   useEffect(() => {
-    if (!project?.gallery?.length) {
+    if (!gallery.length) {
       return;
     }
 
     const previousOverflow = document.body.style.overflow;
-    const galleryLength = project.gallery.length;
+    const galleryLength = gallery.length;
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -741,13 +522,12 @@ function PortfolioModal({
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [project, onClose]);
+  }, [gallery, onClose]);
 
-  if (!project?.gallery?.length) {
+  if (!project || !gallery.length) {
     return null;
   }
 
-  const gallery = project.gallery;
   const activeImage = gallery[selectedIndex];
   const galleryLength = gallery.length;
 
@@ -788,7 +568,7 @@ function PortfolioModal({
         <div className="modal-header">
           <div>
             <h2 id="project-modal-title">{project.title}</h2>
-            <p>{project.summary}</p>
+            <p>{project.description}</p>
           </div>
           <button className="icon-button" type="button" onClick={onClose} aria-label="Close gallery" title="Close">
             <X aria-hidden="true" />
@@ -958,7 +738,24 @@ function Contact() {
 }
 
 export default function App() {
+  const [projects, setProjects] = useState<Project[]>([]);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchProjects()
+      .then((data) => {
+        if (!cancelled) setProjects(data);
+      })
+      .catch(() => {
+        // Public site degrades gracefully to an empty portfolio section.
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="site-shell">
@@ -967,7 +764,7 @@ export default function App() {
         <Hero />
         <About />
         <Skills />
-        <Portfolio onOpenProject={setActiveProject} />
+        <Portfolio projects={projects} onOpenProject={setActiveProject} />
         <Contact />
       </main>
       <AnimatePresence>

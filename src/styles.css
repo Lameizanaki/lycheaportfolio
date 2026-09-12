@@ -29,6 +29,7 @@ html {
 body {
   margin: 0;
   min-width: 320px;
+  overflow-x: hidden;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--body);
@@ -578,13 +579,14 @@ img {
 
 .portfolio-chunk {
   flex: 0 0 100%;
-  min-width: 100%;
+  width: 100%;
+  min-width: 0;
   scroll-snap-align: start;
 }
 
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 2.4rem 3rem;
   align-items: start;
 }
@@ -1031,7 +1033,7 @@ img {
   }
 
   .portfolio-grid {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
   .project-card--left,

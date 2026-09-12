@@ -406,6 +406,17 @@ function Skills() {
   );
 }
 
+const projectCardVariants = ["left", "right", "center", "end"] as const;
+const PROJECTS_PER_PAGE = 4;
+
+function chunk<T>(items: T[], size: number): T[][] {
+  const pages: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    pages.push(items.slice(i, i + size));
+  }
+  return pages;
+}
+
 function Portfolio({
   projects,
   onOpenProject,
@@ -414,75 +425,36 @@ function Portfolio({
   onOpenProject: (project: Project) => void;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const pages = useMemo(() => chunk(projects, PROJECTS_PER_PAGE), [projects]);
 
-  const scrollByAmount = (amount: number) => {
-    scrollRef.current?.scrollBy({ left: amount, behavior: "smooth" });
+  const scrollByPage = (direction: 1 | -1) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: direction * el.clientWidth, behavior: "smooth" });
   };
-
-  const renderCard = (project: Project, index: number) => {
-    const hasModal = project.images.length > 0;
-
-    return (
-      <Reveal key={project.id} className="project-card" delay={(index % 4) * 0.06}>
-        {hasModal ? (
-          <motion.button
-            className="project-open"
-            type="button"
-            onClick={() => onOpenProject(project)}
-            whileHover={{ y: -8 }}
-            whileTap={{ scale: 0.985 }}
-            aria-label={`Open ${project.title} gallery`}
-          >
-            <AssetImage
-              src={project.coverImage}
-              alt={project.title}
-              className="project-image"
-              tone={index % 2 === 0 ? "sage" : "paper"}
-            />
-            <span className="project-hover" aria-hidden="true">
-              <ArrowUpRight />
-            </span>
-          </motion.button>
-        ) : (
-          <motion.div className="project-static" whileHover={{ y: -4 }}>
-            <AssetImage
-              src={project.coverImage}
-              alt={project.title}
-              className="project-image"
-              tone={index % 2 === 0 ? "sage" : "paper"}
-            />
-          </motion.div>
-        )}
-        <h3>{project.title}</h3>
-      </Reveal>
-    );
-  };
-
-  const topRow = projects.filter((_, index) => index % 2 === 0);
-  const bottomRow = projects.filter((_, index) => index % 2 === 1);
 
   return (
     <section id="portfolio" className="portfolio-section section-block">
       <div className="portfolio-heading-row">
         <Reveal className="portfolio-heading">
-          <h2>Content</h2>
+          <h2>Projects</h2>
         </Reveal>
 
-        {projects.length > 0 ? (
+        {pages.length > 1 ? (
           <div className="portfolio-scroll-buttons">
             <button
               className="portfolio-scroll-button"
               type="button"
-              onClick={() => scrollByAmount(-360)}
-              aria-label="Scroll projects left"
+              onClick={() => scrollByPage(-1)}
+              aria-label="Previous projects"
             >
               <ChevronLeft aria-hidden="true" />
             </button>
             <button
               className="portfolio-scroll-button"
               type="button"
-              onClick={() => scrollByAmount(360)}
-              aria-label="Scroll projects right"
+              onClick={() => scrollByPage(1)}
+              aria-label="More projects"
             >
               <ChevronRight aria-hidden="true" />
             </button>
@@ -491,11 +463,56 @@ function Portfolio({
       </div>
 
       <div className="portfolio-scroll" ref={scrollRef}>
-        <div className="portfolio-track">
-          <div className="portfolio-row">{topRow.map((project, i) => renderCard(project, i * 2))}</div>
-          <div className="portfolio-row portfolio-row--offset">
-            {bottomRow.map((project, i) => renderCard(project, i * 2 + 1))}
-          </div>
+        <div className="portfolio-chunks">
+          {pages.map((page, pageIndex) => (
+            <div className="portfolio-chunk" key={pageIndex}>
+              <div className="portfolio-grid">
+                {page.map((project, i) => {
+                  const hasModal = project.images.length > 0;
+                  const variant = projectCardVariants[i % projectCardVariants.length];
+
+                  return (
+                    <Reveal
+                      key={project.id}
+                      className={`project-card project-card--${variant}`}
+                      delay={i * 0.06}
+                    >
+                      {hasModal ? (
+                        <motion.button
+                          className="project-open"
+                          type="button"
+                          onClick={() => onOpenProject(project)}
+                          whileHover={{ y: -8 }}
+                          whileTap={{ scale: 0.985 }}
+                          aria-label={`Open ${project.title} gallery`}
+                        >
+                          <AssetImage
+                            src={project.coverImage}
+                            alt={project.title}
+                            className="project-image"
+                            tone={i % 2 === 0 ? "sage" : "paper"}
+                          />
+                          <span className="project-hover" aria-hidden="true">
+                            <ArrowUpRight />
+                          </span>
+                        </motion.button>
+                      ) : (
+                        <motion.div className="project-static" whileHover={{ y: -4 }}>
+                          <AssetImage
+                            src={project.coverImage}
+                            alt={project.title}
+                            className="project-image"
+                            tone={i % 2 === 0 ? "sage" : "paper"}
+                          />
+                        </motion.div>
+                      )}
+                      <h3>{project.title}</h3>
+                    </Reveal>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

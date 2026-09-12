@@ -55,8 +55,6 @@ type GalleryImage = {
 
 type FormStatus = "idle" | "sending" | "sent" | "error";
 
-const projectCardVariants = ["left", "right", "center", "end"] as const;
-
 const contactEmail = "lycheacheurn@gmail.com";
 const contactPhoneDisplay = "+(855) 98729790";
 const contactTelegram = "http://T.me/lycheacheurn";
@@ -423,12 +421,11 @@ function Portfolio({
       <div className="portfolio-grid">
         {projects.map((project, index) => {
           const hasModal = project.images.length > 0;
-          const variant = projectCardVariants[index % projectCardVariants.length];
 
           return (
             <Reveal
               key={project.id}
-              className={`project-card project-card--${variant}`}
+              className="project-card"
               delay={index * 0.06}
             >
               {hasModal ? (

@@ -535,31 +535,13 @@ img {
 
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 2.4rem 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2.4rem 2rem;
   align-items: start;
 }
 
 .project-card {
   min-width: 0;
-}
-
-.project-card--left {
-  grid-column: 2 / span 3;
-}
-
-.project-card--right {
-  grid-column: 7 / span 3;
-}
-
-.project-card--center {
-  grid-column: 4 / span 3;
-  margin-top: 1.9rem;
-}
-
-.project-card--end {
-  grid-column: 9 / span 3;
-  margin-top: 1.9rem;
 }
 
 .project-open {
@@ -981,17 +963,6 @@ img {
     margin-bottom: 4.5rem;
   }
 
-  .portfolio-grid {
-    grid-template-columns: repeat(6, 1fr);
-  }
-
-  .project-card--left,
-  .project-card--right,
-  .project-card--center,
-  .project-card--end {
-    grid-column: span 3;
-    margin-top: 0;
-  }
 }
 
 @media (max-width: 720px) {
@@ -1175,13 +1146,6 @@ img {
 
   .portfolio-grid {
     grid-template-columns: 1fr;
-  }
-
-  .project-card--left,
-  .project-card--right,
-  .project-card--center,
-  .project-card--end {
-    grid-column: 1;
   }
 
   .modal-backdrop {

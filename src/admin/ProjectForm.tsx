@@ -1,5 +1,6 @@
 import { useRef, useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { createProject, updateProject, MAX_IMAGES_PER_PROJECT, type Project } from "../lib/api";
 import { uploadImage } from "../lib/upload";
 import "./admin.css";
@@ -111,6 +112,10 @@ export function ProjectForm({ mode, project }: ProjectFormProps) {
 
   return (
     <div className="admin-shell">
+      <Link className="admin-back-link" to="/admin">
+        <ArrowLeft aria-hidden="true" size={16} />
+        Back to projects
+      </Link>
       <form className="admin-card admin-project-form" onSubmit={handleSubmit}>
         <h1>{mode === "create" ? "Add project" : "Edit project"}</h1>
 

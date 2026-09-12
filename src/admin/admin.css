@@ -79,13 +79,32 @@
   max-width: 640px;
 }
 
+.admin-back-link {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto 1.25rem;
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 180ms ease;
+}
+
+.admin-back-link:hover {
+  opacity: 1;
+}
+
 .admin-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
-  max-width: 900px;
+  max-width: 1120px;
   margin: 0 auto 2rem;
 }
 
@@ -134,16 +153,16 @@
   list-style: none;
   margin: 0 auto;
   padding: 0;
-  max-width: 900px;
+  max-width: 1120px;
   display: grid;
-  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.1rem;
 }
 
 .admin-project-row {
-  display: grid;
-  grid-template-columns: 84px 1fr auto;
-  align-items: center;
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
   padding: 0.85rem;
   background: var(--paper-strong);
   border: 1px solid var(--soft-line);
@@ -151,8 +170,8 @@
 }
 
 .admin-project-row img {
-  width: 84px;
-  height: 64px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: 4px;
 }
@@ -172,6 +191,7 @@
 .admin-project-actions {
   display: flex;
   gap: 0.5rem;
+  margin-top: auto;
 }
 
 .admin-field {

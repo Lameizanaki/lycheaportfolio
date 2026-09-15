@@ -26,6 +26,7 @@ import {
   X,
 } from "lucide-react";
 import { fetchProjects, type Project } from "./lib/api";
+import { readCachedProjects, writeCachedProjects } from "./lib/projectCache";
 
 type NavItem = {
   id: string;
@@ -39,6 +40,7 @@ type AssetImageProps = {
   fallbackSrc?: string;
   tone?: "paper" | "sage" | "blue" | "warm" | "dark";
   fit?: "cover" | "contain";
+  loading?: "eager" | "lazy";
 };
 
 type RevealProps = {
@@ -88,6 +90,17 @@ const croppedImage = (filename: string) => `/images/cropped/${filename}`;
 const uploadedImage = (filename: string) =>
   `/images/${encodeURIComponent(filename)}`;
 
+const bundledCoverThumbnails = new Map([
+  [croppedImage("4.png"), "/images/thumbnails/4.jpg"],
+  [croppedImage("5.png"), "/images/thumbnails/5.jpg"],
+  [croppedImage("6.png"), "/images/thumbnails/6.jpg"],
+  [croppedImage("7.png"), "/images/thumbnails/7.jpg"],
+]);
+
+function getProjectCardImage(project: Project) {
+  return project.coverThumbnail ?? bundledCoverThumbnails.get(project.coverImage) ?? project.coverImage;
+}
+
 function useActiveSection(ids: string[]) {
   const [activeId, setActiveId] = useState(ids[0] ?? "");
 
@@ -126,6 +139,7 @@ function AssetImage({
   fallbackSrc,
   tone = "paper",
   fit = "cover",
+  loading = "lazy",
 }: AssetImageProps) {
   const [failed, setFailed] = useState(false);
   const [currentSrc, setCurrentSrc] = useState(src);
@@ -143,7 +157,8 @@ function AssetImage({
         <img
           src={currentSrc}
           alt={alt}
-          loading="lazy"
+          loading={loading}
+          decoding="async"
           onError={() => {
             if (fallbackSrc && currentSrc !== fallbackSrc) {
               setCurrentSrc(fallbackSrc);
@@ -406,26 +421,17 @@ function Skills() {
   );
 }
 
-const projectCardVariants = ["left", "right", "center", "end"] as const;
-const PROJECTS_PER_PAGE = 4;
-
-function chunk<T>(items: T[], size: number): T[][] {
-  const pages: T[][] = [];
-  for (let i = 0; i < items.length; i += size) {
-    pages.push(items.slice(i, i + size));
-  }
-  return pages;
-}
-
 function Portfolio({
   projects,
+  loading,
   onOpenProject,
 }: {
   projects: Project[];
+  loading: boolean;
   onOpenProject: (project: Project) => void;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const pages = useMemo(() => chunk(projects, PROJECTS_PER_PAGE), [projects]);
+  const projectList = projects ?? [];
 
   const scrollByPage = (direction: 1 | -1) => {
     const el = scrollRef.current;
@@ -440,7 +446,7 @@ function Portfolio({
           <h2>Projects</h2>
         </Reveal>
 
-        {pages.length > 1 ? (
+        {projectList.length > 1 ? (
           <div className="portfolio-scroll-buttons">
             <button
               className="portfolio-scroll-button"
@@ -463,56 +469,63 @@ function Portfolio({
       </div>
 
       <div className="portfolio-scroll" ref={scrollRef}>
-        <div className="portfolio-chunks">
-          {pages.map((page, pageIndex) => (
-            <div className="portfolio-chunk" key={pageIndex}>
-              <div className="portfolio-grid">
-                {page.map((project, i) => {
-                  const hasModal = project.images.length > 0;
-                  const variant = projectCardVariants[i % projectCardVariants.length];
+        <div className="portfolio-row">
+          {loading && projectList.length === 0
+            ? Array.from({ length: 4 }, (_, index) => (
+                <div className="project-card project-card--skeleton" key={index} aria-hidden="true">
+                  <div className="project-skeleton-image" />
+                  <div className="project-skeleton-title" />
+                </div>
+              ))
+            : null}
+          {projectList.map((project, i) => {
+            const hasModal = project.images.length > 0;
+            const cardImage = getProjectCardImage(project);
+            const hasThumbnail = cardImage !== project.coverImage;
 
-                  return (
-                    <Reveal
-                      key={project.id}
-                      className={`project-card project-card--${variant}`}
-                      delay={i * 0.06}
-                    >
-                      {hasModal ? (
-                        <motion.button
-                          className="project-open"
-                          type="button"
-                          onClick={() => onOpenProject(project)}
-                          whileHover={{ y: -8 }}
-                          whileTap={{ scale: 0.985 }}
-                          aria-label={`Open ${project.title} gallery`}
-                        >
-                          <AssetImage
-                            src={project.coverImage}
-                            alt={project.title}
-                            className="project-image"
-                            tone={i % 2 === 0 ? "sage" : "paper"}
-                          />
-                          <span className="project-hover" aria-hidden="true">
-                            <ArrowUpRight />
-                          </span>
-                        </motion.button>
-                      ) : (
-                        <motion.div className="project-static" whileHover={{ y: -4 }}>
-                          <AssetImage
-                            src={project.coverImage}
-                            alt={project.title}
-                            className="project-image"
-                            tone={i % 2 === 0 ? "sage" : "paper"}
-                          />
-                        </motion.div>
-                      )}
-                      <h3>{project.title}</h3>
-                    </Reveal>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+            return (
+              <Reveal
+                key={project.id}
+                className="project-card"
+                delay={i * 0.04}
+              >
+                {hasModal ? (
+                  <motion.button
+                    className="project-open"
+                    type="button"
+                    onClick={() => onOpenProject(project)}
+                    whileHover={{ y: -8 }}
+                    whileTap={{ scale: 0.985 }}
+                    aria-label={`Open ${project.title} gallery`}
+                  >
+                    <AssetImage
+                      src={cardImage}
+                      alt={project.title}
+                      className="project-image"
+                      fallbackSrc={project.coverImage}
+                      tone={i % 2 === 0 ? "sage" : "paper"}
+                      loading={hasThumbnail && i < 4 ? "eager" : "lazy"}
+                    />
+                    <span className="project-hover" aria-hidden="true">
+                      <ArrowUpRight />
+                    </span>
+                  </motion.button>
+                ) : (
+                  <motion.div className="project-static" whileHover={{ y: -4 }}>
+                    <AssetImage
+                      src={cardImage}
+                      alt={project.title}
+                      className="project-image"
+                      fallbackSrc={project.coverImage}
+                      tone={i % 2 === 0 ? "sage" : "paper"}
+                      loading={hasThumbnail && i < 4 ? "eager" : "lazy"}
+                    />
+                  </motion.div>
+                )}
+                <h3>{project.title}</h3>
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -788,7 +801,8 @@ function Contact() {
 }
 
 export default function App() {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Project[]>(readCachedProjects);
+  const [projectsLoading, setProjectsLoading] = useState(projects.length === 0);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
 
   useEffect(() => {
@@ -796,10 +810,16 @@ export default function App() {
 
     fetchProjects()
       .then((data) => {
-        if (!cancelled) setProjects(data);
+        if (!cancelled) {
+          setProjects(data);
+          writeCachedProjects(data);
+        }
       })
       .catch(() => {
-        // Public site degrades gracefully to an empty portfolio section.
+        // Keep showing cached projects when the API is temporarily unavailable.
+      })
+      .finally(() => {
+        if (!cancelled) setProjectsLoading(false);
       });
 
     return () => {
@@ -814,7 +834,7 @@ export default function App() {
         <Hero />
         <About />
         <Skills />
-        <Portfolio projects={projects} onOpenProject={setActiveProject} />
+        <Portfolio projects={projects} loading={projectsLoading} onOpenProject={setActiveProject} />
         <Contact />
       </main>
       <AnimatePresence>

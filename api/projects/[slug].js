@@ -44,6 +44,7 @@ async function route(request, response) {
     const title = typeof body.title === "string" ? body.title.trim() : "";
     const description = typeof body.description === "string" ? body.description.trim() : "";
     const coverImage = typeof body.coverImage === "string" ? body.coverImage.trim() : "";
+    const coverThumbnail = typeof body.coverThumbnail === "string" ? body.coverThumbnail.trim() || null : null;
     const images = Array.isArray(body.images) ? body.images.filter((url) => typeof url === "string") : [];
 
     if (!title || !description || !coverImage) {
@@ -54,8 +55,8 @@ async function route(request, response) {
       return response.status(400).json({ error: `You can have up to ${MAX_IMAGES_PER_PROJECT} images per project.` });
     }
 
-    const previousBlobUrls = [existing.coverImage, ...existing.images];
-    const nextBlobUrls = new Set([coverImage, ...images]);
+    const previousBlobUrls = [existing.coverImage, existing.coverThumbnail, ...existing.images].filter(Boolean);
+    const nextBlobUrls = new Set([coverImage, coverThumbnail, ...images].filter(Boolean));
     const removedUrls = previousBlobUrls.filter((url) => !nextBlobUrls.has(url));
 
     if (removedUrls.length > 0) {
@@ -68,14 +69,14 @@ async function route(request, response) {
 
     const project = await prisma.project.update({
       where: { slug },
-      data: { title, description, coverImage, images },
+      data: { title, description, coverImage, coverThumbnail, images },
     });
 
     return response.status(200).json({ project });
   }
 
   if (request.method === "DELETE") {
-    const blobUrls = [existing.coverImage, ...existing.images];
+    const blobUrls = [existing.coverImage, existing.coverThumbnail, ...existing.images].filter(Boolean);
     if (blobUrls.length > 0) {
       try {
         await del(blobUrls);

@@ -6,5 +6,6 @@ export default async function handler(request, response) {
     return response.status(405).json({ error: "Method not allowed" });
   }
 
+  response.setHeader("Cache-Control", "private, no-store");
   return response.status(200).json({ authenticated: requireAdmin(request) });
 }

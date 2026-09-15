@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const cropped = (filename) => `/images/cropped/${filename}`;
+const thumbnail = (filename) => `/images/thumbnails/${filename}`;
 
 const projects = [
   {
@@ -10,6 +11,7 @@ const projects = [
     title: "01 Chipmong",
     description: "Master and daughter bedroom detail views and renders.",
     coverImage: cropped("4.png"),
+    coverThumbnail: thumbnail("4.jpg"),
     images: ["4", "8", "9", "10", "11", "13", "14", "15", "16"].map((n) => cropped(`${n}.png`)),
   },
   {
@@ -17,6 +19,7 @@ const projects = [
     title: "02 Borey Angkor PP",
     description: "Bedroom renders, vanity, TV wall, and bath details.",
     coverImage: cropped("6.png"),
+    coverThumbnail: thumbnail("6.jpg"),
     images: ["6", "18", "19", "20", "21", "22", "23", "24"].map((n) => cropped(`${n}.png`)),
   },
   {
@@ -24,6 +27,7 @@ const projects = [
     title: "03 Sensok Villa",
     description: "Living room, hall, and kitchen interior render sets.",
     coverImage: cropped("5.png"),
+    coverThumbnail: thumbnail("5.jpg"),
     images: ["5", "26", "27", "28", "29", "30", "32", "33", "34", "35", "36", "38", "39", "40", "41"].map((n) =>
       cropped(`${n}.png`),
     ),
@@ -33,6 +37,7 @@ const projects = [
     title: "04 Technical Drawing",
     description: "Technical drawing reference.",
     coverImage: cropped("7.png"),
+    coverThumbnail: thumbnail("7.jpg"),
     images: [],
   },
 ];

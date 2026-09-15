@@ -1,26 +1,38 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { deleteProject, fetchProjects, logout, type Project } from "../lib/api";
+import { readCachedProjects, removeCachedProject, writeCachedProjects } from "../lib/projectCache";
 import "./admin.css";
 
 export function AdminDashboard() {
-  const [projects, setProjects] = useState<Project[] | null>(null);
+  const [projects, setProjects] = useState<Project[] | null>(() => {
+    const cached = readCachedProjects();
+    return cached.length > 0 ? cached : null;
+  });
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchProjects()
-      .then(setProjects)
+    fetchProjects({ fresh: true })
+      .then((data) => {
+        setProjects(data);
+        writeCachedProjects(data);
+      })
       .catch((err) => setError(err instanceof Error ? err.message : "Failed to load projects"));
   }, []);
 
   async function handleDelete(slug: string, title: string) {
     if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
 
+    const previousProjects = projects;
+    setProjects((current) => current?.filter((project) => project.slug !== slug) ?? null);
+    removeCachedProject(slug);
+
     try {
       await deleteProject(slug);
-      setProjects((current) => current?.filter((project) => project.slug !== slug) ?? null);
     } catch (err) {
+      setProjects(previousProjects);
+      if (previousProjects) writeCachedProjects(previousProjects);
       setError(err instanceof Error ? err.message : "Failed to delete project");
     }
   }
@@ -47,14 +59,21 @@ export function AdminDashboard() {
       {error ? <p className="admin-error">{error}</p> : null}
 
       {!projects ? (
-        <p>Loading…</p>
+        <ul className="admin-project-list" aria-label="Loading projects">
+          {Array.from({ length: 4 }, (_, index) => (
+            <li className="admin-project-row admin-project-row--skeleton" key={index} aria-hidden="true">
+              <span className="admin-project-skeleton-image" />
+              <span className="admin-project-skeleton-copy" />
+            </li>
+          ))}
+        </ul>
       ) : projects.length === 0 ? (
         <p>No projects yet.</p>
       ) : (
         <ul className="admin-project-list">
           {projects.map((project) => (
             <li key={project.id} className="admin-project-row">
-              <img src={project.coverImage} alt="" />
+              <img src={project.coverThumbnail ?? project.coverImage} alt="" loading="lazy" decoding="async" />
               <div className="admin-project-info">
                 <h2>{project.title}</h2>
                 <p>

@@ -569,48 +569,52 @@ img {
 
 .portfolio-scroll {
   overflow-x: auto;
+  overflow-y: hidden;
+  margin-right: calc(var(--page-x) * -1);
+  margin-left: 0;
+  padding: 0 var(--page-x) 1.2rem 0;
   scrollbar-width: thin;
   scroll-snap-type: x mandatory;
 }
 
-.portfolio-chunks {
+.portfolio-row {
   display: flex;
+  gap: clamp(1.4rem, 3.4vw, 4rem);
+  align-items: start;
+  width: max-content;
+  min-width: 100%;
 }
 
-.portfolio-chunk {
-  flex: 0 0 100%;
-  width: 100%;
+.project-card {
+  flex: 0 0 clamp(15rem, 23vw, 24rem);
   min-width: 0;
   scroll-snap-align: start;
 }
 
-.portfolio-grid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 2.4rem 3rem;
-  align-items: start;
+.project-card--skeleton {
+  animation: project-skeleton-pulse 1.2s ease-in-out infinite alternate;
 }
 
-.project-card {
-  min-width: 0;
+.project-skeleton-image {
+  aspect-ratio: 1.42;
+  background: var(--paper-muted);
 }
 
-.project-card--left {
-  grid-column: 2 / span 3;
+.project-skeleton-title {
+  width: 48%;
+  height: 0.85rem;
+  margin-top: 0.75rem;
+  background: var(--paper-muted);
 }
 
-.project-card--right {
-  grid-column: 7 / span 3;
-}
+@keyframes project-skeleton-pulse {
+  from {
+    opacity: 0.48;
+  }
 
-.project-card--center {
-  grid-column: 4 / span 3;
-  margin-top: 1.9rem;
-}
-
-.project-card--end {
-  grid-column: 9 / span 3;
-  margin-top: 1.9rem;
+  to {
+    opacity: 0.9;
+  }
 }
 
 .project-open {
@@ -1032,16 +1036,8 @@ img {
     margin-bottom: 4.5rem;
   }
 
-  .portfolio-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
-
-  .project-card--left,
-  .project-card--right,
-  .project-card--center,
-  .project-card--end {
-    grid-column: span 3;
-    margin-top: 0;
+  .project-card {
+    flex-basis: clamp(14rem, 38vw, 20rem);
   }
 }
 
@@ -1224,15 +1220,25 @@ img {
     display: none;
   }
 
-  .portfolio-grid {
-    grid-template-columns: 1fr;
+  .portfolio-heading-row {
+    align-items: center;
   }
 
-  .project-card--left,
-  .project-card--right,
-  .project-card--center,
-  .project-card--end {
-    grid-column: 1;
+  .portfolio-section {
+    min-height: auto;
+    padding-bottom: 2.4rem;
+  }
+
+  .portfolio-scroll-buttons {
+    margin-bottom: 1.6rem;
+  }
+
+  .portfolio-scroll {
+    padding-bottom: 0.8rem;
+  }
+
+  .project-card {
+    flex-basis: min(78vw, 18.5rem);
   }
 
   .modal-backdrop {

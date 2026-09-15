@@ -176,6 +176,34 @@
   border-radius: 4px;
 }
 
+.admin-project-row--skeleton {
+  grid-template-columns: 84px 1fr;
+  animation: admin-skeleton-pulse 1.2s ease-in-out infinite alternate;
+}
+
+.admin-project-skeleton-image {
+  width: 84px;
+  height: 64px;
+  background: var(--paper-muted);
+  border-radius: 4px;
+}
+
+.admin-project-skeleton-copy {
+  width: min(14rem, 55%);
+  height: 1rem;
+  background: var(--paper-muted);
+}
+
+@keyframes admin-skeleton-pulse {
+  from {
+    opacity: 0.5;
+  }
+
+  to {
+    opacity: 0.9;
+  }
+}
+
 .admin-project-info h2 {
   margin: 0 0 0.2rem;
   font-family: var(--display);

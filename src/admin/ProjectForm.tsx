@@ -2,7 +2,8 @@ import { useRef, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { createProject, updateProject, MAX_IMAGES_PER_PROJECT, type Project } from "../lib/api";
-import { uploadImage } from "../lib/upload";
+import { upsertCachedProject } from "../lib/projectCache";
+import { uploadCoverImage, uploadImage } from "../lib/upload";
 import "./admin.css";
 
 type StagedImage = {
@@ -10,6 +11,7 @@ type StagedImage = {
   previewUrl: string;
   status: "uploading" | "done" | "error";
   url?: string;
+  thumbnailUrl?: string | null;
 };
 
 type ProjectFormProps = {
@@ -26,7 +28,13 @@ export function ProjectForm({ mode, project }: ProjectFormProps) {
 
   const [cover, setCover] = useState<StagedImage | null>(
     project
-      ? { id: "existing-cover", previewUrl: project.coverImage, status: "done", url: project.coverImage }
+      ? {
+          id: "existing-cover",
+          previewUrl: project.coverThumbnail ?? project.coverImage,
+          status: "done",
+          url: project.coverImage,
+          thumbnailUrl: project.coverThumbnail,
+        }
       : null,
   );
   const [images, setImages] = useState<StagedImage[]>(
@@ -48,8 +56,8 @@ export function ProjectForm({ mode, project }: ProjectFormProps) {
     setCover({ id: "cover", previewUrl, status: "uploading" });
 
     try {
-      const url = await uploadImage(file);
-      setCover({ id: "cover", previewUrl, status: "done", url });
+      const { url, thumbnailUrl } = await uploadCoverImage(file);
+      setCover({ id: "cover", previewUrl, status: "done", url, thumbnailUrl });
     } catch {
       setCover({ id: "cover", previewUrl, status: "error" });
     }
@@ -96,12 +104,22 @@ export function ProjectForm({ mode, project }: ProjectFormProps) {
 
     setSubmitting(true);
     try {
-      const input = { title, description, coverImage: cover.url, images: imageUrls };
+      const input = {
+        title,
+        description,
+        coverImage: cover.url,
+        coverThumbnail: cover.thumbnailUrl ?? null,
+        images: imageUrls,
+      };
+      let savedProject: Project;
       if (mode === "create") {
-        await createProject(input);
+        savedProject = await createProject(input);
       } else if (project) {
-        await updateProject(project.slug, input);
+        savedProject = await updateProject(project.slug, input);
+      } else {
+        return;
       }
+      upsertCachedProject(savedProject);
       navigate("/admin");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save project");
@@ -134,7 +152,12 @@ export function ProjectForm({ mode, project }: ProjectFormProps) {
           <div className="admin-image-grid admin-image-grid--single">
             {cover ? (
               <div className="admin-image-tile">
-                <img className={cover.status === "uploading" ? "is-uploading" : ""} src={cover.previewUrl} alt="" />
+                <img
+                  className={cover.status === "uploading" ? "is-uploading" : ""}
+                  src={cover.previewUrl}
+                  alt=""
+                  decoding="async"
+                />
                 {cover.status === "uploading" ? <span className="admin-spinner" /> : null}
                 {cover.status === "error" ? <span className="admin-tile-error">Failed</span> : null}
                 <button
@@ -175,7 +198,13 @@ export function ProjectForm({ mode, project }: ProjectFormProps) {
           <div className="admin-image-grid">
             {images.map((image) => (
               <div className="admin-image-tile" key={image.id}>
-                <img className={image.status === "uploading" ? "is-uploading" : ""} src={image.previewUrl} alt="" />
+                <img
+                  className={image.status === "uploading" ? "is-uploading" : ""}
+                  src={image.previewUrl}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
                 {image.status === "uploading" ? <span className="admin-spinner" /> : null}
                 {image.status === "error" ? <span className="admin-tile-error">Failed</span> : null}
                 <button

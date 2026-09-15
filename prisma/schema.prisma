@@ -8,14 +8,15 @@ datasource db {
 }
 
 model Project {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  title       String
-  description String
-  coverImage  String
-  images      String[] @default([])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  title          String
+  description    String
+  coverImage     String
+  coverThumbnail String?
+  images         String[] @default([])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   @@index([createdAt])
 }

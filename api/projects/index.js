@@ -20,6 +20,10 @@ async function generateUniqueSlug(title) {
 export default async function handler(request, response) {
   try {
     if (request.method === "GET") {
+      response.setHeader(
+        "Cache-Control",
+        request.query.fresh === "1" ? "private, no-store" : "public, max-age=0, s-maxage=30, stale-while-revalidate=300",
+      );
       const projects = await prisma.project.findMany({
         orderBy: { createdAt: "desc" },
       });
@@ -41,6 +45,7 @@ export default async function handler(request, response) {
       const title = typeof body.title === "string" ? body.title.trim() : "";
       const description = typeof body.description === "string" ? body.description.trim() : "";
       const coverImage = typeof body.coverImage === "string" ? body.coverImage.trim() : "";
+      const coverThumbnail = typeof body.coverThumbnail === "string" ? body.coverThumbnail.trim() || null : null;
       const images = Array.isArray(body.images) ? body.images.filter((url) => typeof url === "string") : [];
 
       if (!title || !description || !coverImage) {
@@ -54,7 +59,7 @@ export default async function handler(request, response) {
       const slug = await generateUniqueSlug(title);
 
       const project = await prisma.project.create({
-        data: { slug, title, description, coverImage, images },
+        data: { slug, title, description, coverImage, coverThumbnail, images },
       });
 
       return response.status(201).json({ project });

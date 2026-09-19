@@ -22,7 +22,7 @@ export default async function handler(request, response) {
     if (request.method === "GET") {
       response.setHeader(
         "Cache-Control",
-        request.query.fresh === "1" ? "private, no-store" : "public, max-age=0, s-maxage=30, stale-while-revalidate=300",
+        request.query.fresh === "1" ? "private, no-store" : "public, max-age=0, s-maxage=5, stale-while-revalidate=30",
       );
       const projects = await prisma.project.findMany({
         orderBy: { createdAt: "desc" },

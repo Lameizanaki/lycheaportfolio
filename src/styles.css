@@ -564,13 +564,14 @@ img {
 
 .portfolio-heading-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
+  margin-bottom: 2.3rem;
 }
 
 .portfolio-heading h2 {
-  margin-bottom: 2.3rem;
+  margin-bottom: 0;
   font-size: 5.7rem;
   line-height: 0.9;
 }
@@ -578,7 +579,7 @@ img {
 .portfolio-scroll-buttons {
   display: flex;
   gap: 0.6rem;
-  margin-bottom: 2.3rem;
+  margin-bottom: 0;
 }
 
 .portfolio-scroll-button {
@@ -1258,6 +1259,7 @@ img {
     align-items: center;
     flex-wrap: nowrap;
     gap: 0.75rem;
+    margin-bottom: 1.6rem;
   }
 
   .portfolio-heading {
@@ -1276,7 +1278,6 @@ img {
   .portfolio-scroll-buttons {
     flex: 0 0 auto;
     gap: 0.45rem;
-    margin-bottom: 1.6rem;
   }
 
   .portfolio-scroll-button {
@@ -1354,26 +1355,6 @@ img {
 
   .contact-copy p {
     font-size: 1.12rem;
-  }
-}
-
-@media (max-width: 380px) {
-  .portfolio-heading h2 {
-    font-size: 2.3rem;
-  }
-
-  .portfolio-scroll-buttons {
-    gap: 0.35rem;
-  }
-
-  .portfolio-scroll-button {
-    width: 1.9rem;
-    height: 1.9rem;
-  }
-
-  .portfolio-scroll-button svg {
-    width: 0.85rem;
-    height: 0.85rem;
   }
 }
 

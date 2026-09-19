@@ -441,7 +441,9 @@ img {
 .work-skills {
   min-height: calc(100svh - var(--header-height));
   display: grid;
-  align-items: center;
+  align-items: start;
+  padding-top: 4.4rem;
+  padding-bottom: 4.4rem;
 }
 
 .personal-skills {
@@ -457,10 +459,6 @@ img {
 }
 
 .skill-list li {
-  display: grid;
-  grid-template-columns: 1.6rem 1fr;
-  align-items: center;
-  min-height: 3.9rem;
   border-top: 1px solid var(--line);
   color: var(--ink);
   text-transform: uppercase;
@@ -470,17 +468,54 @@ img {
   border-bottom: 1px solid var(--line);
 }
 
+.skill-trigger {
+  display: grid;
+  grid-template-columns: 1fr 1.6rem;
+  align-items: center;
+  width: 100%;
+  min-height: 3.9rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
 .skill-list svg {
   width: 1.25rem;
   height: 1.25rem;
   fill: var(--ink);
   stroke-width: 1.8;
+  justify-self: end;
+  transition: transform 220ms ease;
+}
+
+.skill-arrow {
+  transform: rotate(0deg);
+}
+
+.skill-list li.is-open .skill-arrow {
+  transform: rotate(90deg);
 }
 
 .skill-list span {
   font-size: 1.18rem;
   font-weight: 700;
   line-height: 1.15;
+}
+
+.skill-description {
+  max-width: 32rem;
+  margin: 0 0 1.4rem;
+  padding-right: 1.6rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(7, 7, 6, 0.64);
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .personal-copy h2 {
@@ -507,7 +542,6 @@ img {
 .work-skills {
   grid-template-columns: minmax(320px, 0.92fr) minmax(320px, 1.18fr);
   gap: 6rem;
-  align-items: center;
 }
 
 .work-media h2 {
@@ -1222,6 +1256,16 @@ img {
 
   .portfolio-heading-row {
     align-items: center;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+  }
+
+  .portfolio-heading {
+    min-width: 0;
+  }
+
+  .portfolio-heading h2 {
+    font-size: 2.9rem;
   }
 
   .portfolio-section {
@@ -1230,7 +1274,19 @@ img {
   }
 
   .portfolio-scroll-buttons {
+    flex: 0 0 auto;
+    gap: 0.45rem;
     margin-bottom: 1.6rem;
+  }
+
+  .portfolio-scroll-button {
+    width: 2.15rem;
+    height: 2.15rem;
+  }
+
+  .portfolio-scroll-button svg {
+    width: 1rem;
+    height: 1rem;
   }
 
   .portfolio-scroll {
@@ -1298,6 +1354,26 @@ img {
 
   .contact-copy p {
     font-size: 1.12rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .portfolio-heading h2 {
+    font-size: 2.3rem;
+  }
+
+  .portfolio-scroll-buttons {
+    gap: 0.35rem;
+  }
+
+  .portfolio-scroll-button {
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+
+  .portfolio-scroll-button svg {
+    width: 0.85rem;
+    height: 0.85rem;
   }
 }
 

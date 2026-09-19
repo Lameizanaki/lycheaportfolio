@@ -72,18 +72,55 @@ const navItems: NavItem[] = [
   { id: "contact", label: "Contact" },
 ];
 
-const personalSkills = [
-  "Problem solving",
-  "Communication",
-  "Time management",
-  "Attention to detail",
+type SkillEntry = {
+  title: string;
+  description: string;
+};
+
+const personalSkills: SkillEntry[] = [
+  {
+    title: "Communication",
+    description:
+      "I translate ideas clearly between clients, contractors, and vendors, turning vague requests into a shared vision everyone can act on.",
+  },
+  {
+    title: "Problem solving",
+    description:
+      "When a floor plan clashes with reality, whether it's piping, budget, or permits, I find the workaround that keeps the design intent intact.",
+  },
+  {
+    title: "Time management",
+    description:
+      "Multiple projects, tight handover dates. I plan backwards from the deadline so nothing gets rushed at the finish line.",
+  },
+  {
+    title: "Attention to detail",
+    description:
+      "The difference between a good space and a great one usually lives in the millimeters: trim reveals, finish transitions, sightlines.",
+  },
 ];
 
-const workSkills = [
-  "Technical detailing",
-  "Interior fit-out design",
-  "Material calculation",
-  "Rendering",
+const workSkills: SkillEntry[] = [
+  {
+    title: "Technical detailing",
+    description:
+      "Turning concepts into buildable drawings: junctions, sections, and specs contractors can execute without guesswork.",
+  },
+  {
+    title: "Interior fit-out design",
+    description:
+      "Full-scope planning from layout to finishes, coordinating structure, MEP, and furniture into one cohesive fit-out.",
+  },
+  {
+    title: "Material calculation",
+    description:
+      "Accurate takeoffs and quantity estimates that keep procurement on budget and on schedule.",
+  },
+  {
+    title: "Rendering",
+    description:
+      "Photoreal 3D visualization that lets clients experience a space, its materials, light, and mood, before construction begins.",
+  },
 ];
 
 const croppedImage = (filename: string) => `/images/cropped/${filename}`;
@@ -368,15 +405,28 @@ function About() {
   );
 }
 
-function SkillList({ items }: { items: string[] }) {
+function SkillList({ items }: { items: SkillEntry[] }) {
+  const [openTitle, setOpenTitle] = useState<string | null>(items[0]?.title ?? null);
+
   return (
     <ul className="skill-list">
-      {items.map((item) => (
-        <li key={item}>
-          <ArrowRight aria-hidden="true" />
-          <span>{item}</span>
-        </li>
-      ))}
+      {items.map((item) => {
+        const isOpen = openTitle === item.title;
+        return (
+          <li key={item.title} className={isOpen ? "is-open" : undefined}>
+            <button
+              type="button"
+              className="skill-trigger"
+              aria-expanded={isOpen}
+              onClick={() => setOpenTitle(isOpen ? null : item.title)}
+            >
+              <span>{item.title}</span>
+              <ArrowRight className="skill-arrow" aria-hidden="true" />
+            </button>
+            {isOpen ? <p className="skill-description">{item.description}</p> : null}
+          </li>
+        );
+      })}
     </ul>
   );
 }

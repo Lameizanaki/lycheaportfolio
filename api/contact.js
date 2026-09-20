@@ -61,7 +61,7 @@ export default async function handler(request, response) {
     const safePhone = escapeHtml(phone || "Not provided");
     const safeMessage = escapeHtml(message).replace(/\n/g, "<br />");
 
-    const result = await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from:
         process.env.RESEND_FROM_EMAIL ??
         "Lychea Portfolio <onboarding@resend.dev>",
@@ -87,7 +87,12 @@ export default async function handler(request, response) {
       `,
     });
 
-    return response.status(200).json({ ok: true, id: result.data?.id });
+    if (error) {
+      console.error(error);
+      return response.status(502).json({ error: "Email could not be sent" });
+    }
+
+    return response.status(200).json({ ok: true, id: data?.id });
   } catch (error) {
     console.error(error);
     return response.status(500).json({ error: "Email could not be sent" });

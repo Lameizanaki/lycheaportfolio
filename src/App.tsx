@@ -196,6 +196,7 @@ function AssetImage({
           alt={alt}
           loading={loading}
           decoding="async"
+          draggable={false}
           onError={() => {
             if (fallbackSrc && currentSrc !== fallbackSrc) {
               setCurrentSrc(fallbackSrc);
@@ -702,10 +703,24 @@ function PortfolioModal({
             <motion.div
               key={activeImage.src}
               className="modal-main-image"
+              style={{ touchAction: "pan-y" }}
               initial={reduceMotion ? false : { opacity: 0, x: 24 }}
               animate={reduceMotion ? undefined : { opacity: 1, x: 0 }}
               exit={reduceMotion ? undefined : { opacity: 0, x: -24 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+              drag={galleryLength > 1 ? "x" : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.7}
+              dragMomentum={false}
+              onDragEnd={(_event, info) => {
+                const swipeThreshold = 50;
+                const swipeVelocity = 400;
+                if (info.offset.x < -swipeThreshold || info.velocity.x < -swipeVelocity) {
+                  showNext();
+                } else if (info.offset.x > swipeThreshold || info.velocity.x > swipeVelocity) {
+                  showPrevious();
+                }
+              }}
             >
               <AssetImage
                 src={activeImage.src}

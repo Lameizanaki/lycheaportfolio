@@ -1176,11 +1176,11 @@ img {
   .site-nav {
     position: absolute;
     top: calc(100% + 0.65rem);
-    right: var(--page-x);
-    left: var(--page-x);
+    right: 0;
+    left: 0;
     display: grid;
     gap: 0;
-    width: auto;
+    width: 100%;
     overflow: hidden;
     padding: 0.35rem;
     border: 1px solid var(--line);

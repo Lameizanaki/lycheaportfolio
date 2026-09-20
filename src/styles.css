@@ -439,7 +439,7 @@ img {
 
 .profile-cut {
   z-index: 2;
-  transform: rotate(-1.5deg) scale(1.1);
+  transform: rotate(-3deg) scale(1.1);
   transform-origin: bottom center;
 }
 
@@ -458,12 +458,12 @@ img {
 
 .profile-card:hover .profile-arch,
 .profile-card:focus-visible .profile-arch {
-  transform: rotate(-3.5deg) translateY(-0.15rem);
+  transform: rotate(-3deg) translateY(-0.15rem);
 }
 
 .profile-card:hover .profile-cut,
 .profile-card:focus-visible .profile-cut {
-  transform: rotate(-1.8deg) scale(1.16) translateY(-0.35rem);
+  transform: rotate(-3deg) scale(1.16) translateY(-0.35rem);
   transform-origin: bottom center;
 }
 

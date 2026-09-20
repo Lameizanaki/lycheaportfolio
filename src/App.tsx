@@ -395,13 +395,21 @@ function About() {
           <div className="dot-grid" aria-hidden="true" />
           <article className="profile-card" tabIndex={0}>
             <div className="profile-stage">
-              <div className="profile-arch" aria-hidden="true" />
+              <img
+                className="profile-arch"
+                src={uploadedImage("profile-arch.png")}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                draggable={false}
+              />
               <div className="profile-cut">
                 <AssetImage
-                  src={uploadedImage("Frame 1 (1).png")}
-                  fallbackSrc={croppedImage("1.png")}
+                  src={uploadedImage("profile-new.webp")}
+                  fallbackSrc={uploadedImage("Frame 1 (1).png")}
                   alt="Lychea Cheurn portrait"
                   className="profile-photo"
+                  loading="eager"
                   frame={false}
                 />
               </div>

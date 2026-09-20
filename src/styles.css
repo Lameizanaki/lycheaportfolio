@@ -294,7 +294,7 @@ img {
   display: grid;
   grid-template-columns: minmax(420px, 1fr) minmax(260px, 25rem);
   gap: clamp(2rem, 4vw, 4.5rem);
-  align-items: start;
+  align-items: center;
 }
 
 .asset-frame {
@@ -382,17 +382,6 @@ img {
 .profile-column {
   position: relative;
   max-width: 23rem;
-  padding-top: clamp(5rem, 8vw, 10rem);
-}
-
-.dot-grid {
-  position: absolute;
-  top: clamp(3rem, 6vw, 8rem);
-  left: -3.8rem;
-  width: 6rem;
-  height: 5rem;
-  background-image: radial-gradient(var(--ink) 1.6px, transparent 1.7px);
-  background-size: 0.72rem 0.72rem;
 }
 
 .profile-card {
@@ -434,7 +423,7 @@ img {
   z-index: 1;
   object-fit: contain;
   object-position: bottom center;
-  transform: scale(0.82);
+  transform: scale(0.92);
   transform-origin: bottom center;
   filter: drop-shadow(0 1.6rem 3rem rgba(7, 7, 6, 0.2));
 }
@@ -460,13 +449,13 @@ img {
 
 .profile-card:hover .profile-arch,
 .profile-card:focus-visible .profile-arch {
-  transform: rotate(-3deg) translateY(-0.15rem) scale(0.82);
+  transform: rotate(-1deg) translateY(-0.12rem) scale(0.95);
   transform-origin: bottom center;
 }
 
 .profile-card:hover .profile-cut,
 .profile-card:focus-visible .profile-cut {
-  transform: rotate(-3deg) scale(1.16) translateY(-0.35rem);
+  transform: rotate(-1.5deg) scale(1.10) translateY(-0.35rem);
   transform-origin: bottom center;
 }
 
@@ -1132,12 +1121,6 @@ img {
 
   .profile-column {
     max-width: 20rem;
-    padding-top: 2rem;
-  }
-
-  .dot-grid {
-    top: 0.5rem;
-    left: 12rem;
   }
 
   .personal-skills,
@@ -1308,7 +1291,6 @@ img {
     justify-self: center;
     width: min(100%, 20rem);
     max-width: 20rem;
-    padding-top: 1rem;
     text-align: center;
   }
 
@@ -1318,10 +1300,6 @@ img {
     aspect-ratio: 0.8;
     margin-right: auto;
     margin-left: auto;
-  }
-
-  .dot-grid {
-    display: none;
   }
 
   .portfolio-heading-row {

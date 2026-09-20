@@ -392,7 +392,6 @@ function About() {
         </Reveal>
 
         <Reveal className="profile-column" delay={0.16} direction="right">
-          <div className="dot-grid" aria-hidden="true" />
           <article className="profile-card" tabIndex={0}>
             <div className="profile-stage">
               <img

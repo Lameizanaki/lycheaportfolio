@@ -433,6 +433,7 @@ img {
 .profile-arch {
   z-index: 1;
   object-fit: contain;
+  object-position: bottom center;
   transform: rotate(-3deg);
   filter: drop-shadow(0 1.6rem 3rem rgba(7, 7, 6, 0.2));
 }

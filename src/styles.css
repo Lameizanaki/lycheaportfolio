@@ -292,14 +292,9 @@ img {
 
 .about-grid {
   display: grid;
-  grid-template-columns: minmax(220px, 26rem) minmax(420px, 1fr) minmax(220px, 23rem);
-  gap: clamp(2rem, 3vw, 3.1rem);
+  grid-template-columns: minmax(420px, 1fr) minmax(260px, 25rem);
+  gap: clamp(2rem, 4vw, 4.5rem);
   align-items: start;
-}
-
-.about-image-wrap {
-  width: 100%;
-  max-width: 26rem;
 }
 
 .asset-frame {
@@ -367,14 +362,6 @@ img {
   color: rgba(244, 243, 236, 0.72);
 }
 
-.about-arch-image {
-  width: 100%;
-  height: clamp(30rem, 45vw, 40rem);
-  min-height: 0;
-  aspect-ratio: auto;
-  border-radius: 13rem 13rem 0 0;
-}
-
 .about-copy {
   padding-top: 0.7rem;
 }
@@ -408,12 +395,73 @@ img {
   background-size: 0.72rem 0.72rem;
 }
 
-.profile-image {
+.profile-card {
+  display: block;
+  border: 0;
+  background: none;
+  cursor: default;
+  outline-offset: 6px;
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.profile-card:hover,
+.profile-card:focus-visible {
+  transform: translateY(-0.7rem) scale(1.025);
+}
+
+.profile-card:focus-visible {
+  outline: 2px solid var(--line);
+}
+
+.profile-stage {
+  position: relative;
   height: clamp(24rem, 33vw, 32rem);
   aspect-ratio: 0.72;
-  border-radius: 9rem 9rem 0 0;
-  box-shadow: 0 1.8rem 3.8rem rgba(7, 7, 6, 0.22);
   animation: profileFloat 5.4s ease-in-out infinite;
+}
+
+.profile-arch {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transform: translate(0.9rem, 1.1rem) rotate(-3deg);
+  border-radius: 9rem 9rem 0 0;
+  background: linear-gradient(160deg, var(--sage), var(--blue));
+  box-shadow: 0 1.8rem 3.8rem rgba(7, 7, 6, 0.18);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.profile-cut {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  transform: rotate(-1.4deg);
+  border-radius: 9rem 9rem 0 0;
+  background: var(--paper-muted);
+  box-shadow: 0 1.4rem 2.8rem rgba(7, 7, 6, 0.24);
+  transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.profile-photo,
+.profile-photo img {
+  width: 100%;
+  height: 100%;
+}
+
+.profile-photo img {
+  display: block;
+  object-fit: cover;
+}
+
+.profile-card:hover .profile-arch,
+.profile-card:focus-visible .profile-arch {
+  transform: translate(1.3rem, 1.5rem) rotate(-5deg);
+}
+
+.profile-card:hover .profile-cut,
+.profile-card:focus-visible .profile-cut {
+  transform: rotate(-2.2deg);
 }
 
 @keyframes profileFloat {
@@ -427,7 +475,28 @@ img {
   }
 }
 
-.profile-column blockquote {
+.profile-text {
+  margin-top: 1.6rem;
+}
+
+.profile-name {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.profile-role {
+  margin-top: 0.3rem;
+  color: rgba(7, 7, 6, 0.58);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.profile-bio {
   margin: 0.75rem 0 0;
   font-size: 0.96rem;
   line-height: 1.34;
@@ -1048,10 +1117,6 @@ img {
     gap: 2.4rem;
   }
 
-  .about-image-wrap {
-    max-width: 30rem;
-  }
-
   .profile-column {
     max-width: 20rem;
     padding-top: 2rem;
@@ -1214,15 +1279,6 @@ img {
     font-size: 0.88rem;
   }
 
-  .about-arch-image {
-    height: min(30rem, 105vw);
-    min-height: 0;
-  }
-
-  .about-image-wrap {
-    display: none;
-  }
-
   .about-copy h2,
   .personal-copy h2,
   .work-media h2,
@@ -1243,11 +1299,16 @@ img {
     text-align: center;
   }
 
-  .profile-image {
+  .profile-stage {
     width: min(76vw, 18rem);
     height: auto;
+    aspect-ratio: 0.72;
     margin-right: auto;
     margin-left: auto;
+  }
+
+  .profile-arch,
+  .profile-cut {
     box-shadow: 0 1.25rem 2.5rem rgba(7, 7, 6, 0.2);
   }
 

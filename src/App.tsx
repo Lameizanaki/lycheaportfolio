@@ -41,6 +41,7 @@ type AssetImageProps = {
   tone?: "paper" | "sage" | "blue" | "warm" | "dark";
   fit?: "cover" | "contain";
   loading?: "eager" | "lazy";
+  frame?: boolean;
 };
 
 type RevealProps = {
@@ -177,6 +178,7 @@ function AssetImage({
   tone = "paper",
   fit = "cover",
   loading = "lazy",
+  frame = true,
 }: AssetImageProps) {
   const [failed, setFailed] = useState(false);
   const [currentSrc, setCurrentSrc] = useState(src);
@@ -186,10 +188,8 @@ function AssetImage({
     setCurrentSrc(src);
   }, [src]);
 
-  return (
-    <div
-      className={`asset-frame asset-frame--${tone} asset-frame--${fit} ${className}`}
-    >
+  const content = (
+    <>
       {!failed && (
         <img
           src={currentSrc}
@@ -212,6 +212,18 @@ function AssetImage({
           <span>{alt}</span>
         </div>
       )}
+    </>
+  );
+
+  if (!frame) {
+    return <div className={className}>{content}</div>;
+  }
+
+  return (
+    <div
+      className={`asset-frame asset-frame--${tone} asset-frame--${fit} ${className}`}
+    >
+      {content}
     </div>
   );
 }
@@ -360,16 +372,7 @@ function About() {
   return (
     <section id="about" className="about-section section-block">
       <div className="about-grid">
-        <Reveal className="about-image-wrap" direction="left">
-          <AssetImage
-            src={croppedImage("2.png")}
-            alt="Interior material styling"
-            className="about-arch-image"
-            tone="sage"
-          />
-        </Reveal>
-
-        <Reveal className="about-copy" delay={0.08}>
+        <Reveal className="about-copy" delay={0.08} direction="left">
           <h2>About me</h2>
           <p>
             I am an interior designer focused on practical, buildable spaces.
@@ -390,16 +393,27 @@ function About() {
 
         <Reveal className="profile-column" delay={0.16} direction="right">
           <div className="dot-grid" aria-hidden="true" />
-          <AssetImage
-            src={uploadedImage("Frame 1 (1).png")}
-            fallbackSrc={croppedImage("1.png")}
-            alt="Lychea portrait"
-            className="profile-image"
-            tone="sage"
-          />
-          <blockquote>
-            "Design is where an idea meets practical execution."
-          </blockquote>
+          <article className="profile-card" tabIndex={0}>
+            <div className="profile-stage">
+              <div className="profile-arch" aria-hidden="true" />
+              <div className="profile-cut">
+                <AssetImage
+                  src={uploadedImage("Frame 1 (1).png")}
+                  fallbackSrc={croppedImage("1.png")}
+                  alt="Lychea Cheurn portrait"
+                  className="profile-photo"
+                  frame={false}
+                />
+              </div>
+            </div>
+            <div className="profile-text">
+              <div className="profile-name">Lychea Cheurn</div>
+              <div className="profile-role">Interior Designer</div>
+              <p className="profile-bio">
+                "Design is where an idea meets practical execution."
+              </p>
+            </div>
+          </article>
         </Reveal>
       </div>
     </section>

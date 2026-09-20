@@ -415,7 +415,7 @@ img {
 
 .profile-stage {
   position: relative;
-  height: clamp(24rem, 33vw, 32rem);
+  height: clamp(28rem, 33vw, 32rem);
   aspect-ratio: 0.8;
   margin: 0 auto;
   animation: profileFloat 5.4s ease-in-out infinite;
@@ -434,13 +434,14 @@ img {
   z-index: 1;
   object-fit: contain;
   object-position: bottom center;
-  transform: rotate(-3deg);
+  transform: scale(0.82);
+  transform-origin: bottom center;
   filter: drop-shadow(0 1.6rem 3rem rgba(7, 7, 6, 0.2));
 }
 
 .profile-cut {
   z-index: 2;
-  transform: rotate(-3deg) scale(1.1);
+  transform: scale(1.1);
   transform-origin: bottom center;
 }
 
@@ -459,7 +460,8 @@ img {
 
 .profile-card:hover .profile-arch,
 .profile-card:focus-visible .profile-arch {
-  transform: rotate(-3deg) translateY(-0.15rem);
+  transform: rotate(-3deg) translateY(-0.15rem) scale(0.82);
+  transform-origin: bottom center;
 }
 
 .profile-card:hover .profile-cut,

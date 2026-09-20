@@ -395,25 +395,23 @@ function About() {
           <div className="dot-grid" aria-hidden="true" />
           <article className="profile-card" tabIndex={0}>
             <div className="profile-stage">
-              <div className="profile-tilt">
-                <img
-                  className="profile-arch"
-                  src={uploadedImage("profile-arch.png")}
-                  alt=""
-                  aria-hidden="true"
-                  loading="lazy"
-                  draggable={false}
+              <img
+                className="profile-arch"
+                src={uploadedImage("profile-arch.png")}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                draggable={false}
+              />
+              <div className="profile-cut">
+                <AssetImage
+                  src={uploadedImage("profile-new.webp")}
+                  fallbackSrc={uploadedImage("Frame 1 (1).png")}
+                  alt="Lychea Cheurn portrait"
+                  className="profile-photo"
+                  loading="eager"
+                  frame={false}
                 />
-                <div className="profile-cut">
-                  <AssetImage
-                    src={uploadedImage("profile-new.webp")}
-                    fallbackSrc={uploadedImage("Frame 1 (1).png")}
-                    alt="Lychea Cheurn portrait"
-                    className="profile-photo"
-                    loading="eager"
-                    frame={false}
-                  />
-                </div>
               </div>
             </div>
             <div className="profile-text">

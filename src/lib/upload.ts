@@ -2,6 +2,8 @@ import { upload } from "@vercel/blob/client";
 
 const THUMBNAIL_MAX_EDGE = 800;
 const THUMBNAIL_QUALITY = 0.82;
+const DISPLAY_MAX_EDGE = 2000;
+const DISPLAY_QUALITY = 0.82;
 
 export async function uploadImage(file: File): Promise<string> {
   const blob = await upload(`lychea/${file.name}`, file, {
@@ -11,7 +13,7 @@ export async function uploadImage(file: File): Promise<string> {
   return blob.url;
 }
 
-async function createThumbnail(file: File): Promise<File> {
+async function resizeImage(file: File, maxEdge: number, quality: number, suffix: string): Promise<File> {
   const objectUrl = URL.createObjectURL(file);
 
   try {
@@ -22,7 +24,7 @@ async function createThumbnail(file: File): Promise<File> {
       element.src = objectUrl;
     });
 
-    const scale = Math.min(1, THUMBNAIL_MAX_EDGE / Math.max(image.naturalWidth, image.naturalHeight));
+    const scale = Math.min(1, maxEdge / Math.max(image.naturalWidth, image.naturalHeight));
     const width = Math.max(1, Math.round(image.naturalWidth * scale));
     const height = Math.max(1, Math.round(image.naturalHeight * scale));
     const canvas = document.createElement("canvas");
@@ -40,17 +42,21 @@ async function createThumbnail(file: File): Promise<File> {
 
     const blob = await new Promise<Blob>((resolve, reject) => {
       canvas.toBlob(
-        (result) => (result ? resolve(result) : reject(new Error("Could not create an image thumbnail."))),
+        (result) => (result ? resolve(result) : reject(new Error("Could not resize this image."))),
         "image/webp",
-        THUMBNAIL_QUALITY,
+        quality,
       );
     });
 
-    const baseName = file.name.replace(/\.[^.]+$/, "") || "cover";
-    return new File([blob], `${baseName}-thumbnail.webp`, { type: "image/webp" });
+    const baseName = file.name.replace(/\.[^.]+$/, "") || "image";
+    return new File([blob], `${baseName}-${suffix}.webp`, { type: "image/webp" });
   } finally {
     URL.revokeObjectURL(objectUrl);
   }
+}
+
+async function createThumbnail(file: File): Promise<File> {
+  return resizeImage(file, THUMBNAIL_MAX_EDGE, THUMBNAIL_QUALITY, "thumbnail");
 }
 
 export async function uploadCoverImage(file: File): Promise<{ url: string; thumbnailUrl: string | null }> {
@@ -60,4 +66,17 @@ export async function uploadCoverImage(file: File): Promise<{ url: string; thumb
 
   const [url, thumbnailUrl] = await Promise.all([uploadImage(file), thumbnailUpload]);
   return { url, thumbnailUrl: thumbnailUrl ?? null };
+}
+
+export async function uploadGalleryImage(file: File): Promise<string> {
+  try {
+    const display = await resizeImage(file, DISPLAY_MAX_EDGE, DISPLAY_QUALITY, "display");
+    if (display.size < file.size) {
+      return await uploadImage(display);
+    }
+  } catch {
+    // Fall through to uploading the original file.
+  }
+
+  return uploadImage(file);
 }

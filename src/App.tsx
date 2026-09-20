@@ -104,22 +104,22 @@ const workSkills: SkillEntry[] = [
   {
     title: "Technical detailing",
     description:
-      "Turning concepts into buildable drawings: junctions, sections, and specs contractors can execute without guesswork.",
+      "Producing precise, production-ready CAD drawings and technical specifications using AutoCAD & Sketchup Layout. Specializing in detailed joinery details, custom furniture shop drawings, section cuts, and fabrication specs that connects between design concepts and factory production.",
   },
   {
     title: "Interior fit-out design",
     description:
-      "Full-scope planning from layout to finishes, coordinating structure, MEP, and furniture into one cohesive fit-out.",
+      "Transforming interior spaces with functional, aesthetics design solutions using SketchUp and Rhino. Combining spatial planning with hands-on furniture fit-out experience to deliver custom cabinetry, and material schemes designed for practical manufacturing and installation.",
   },
   {
     title: "Material calculation",
     description:
-      "Accurate takeoffs and quantity estimates that keep procurement on budget and on schedule.",
+      "Delivering accurate material takeoffs, bill of quantities (BOQ), and yield estimations for interior fit-out projects. Utilizing real-world production experience to optimize sheet goods, hardware, and surface finishing drastically reducing material wastage and keeping project budgets on track.",
   },
   {
     title: "Rendering",
     description:
-      "Photoreal 3D visualization that lets clients experience a space, its materials, light, and mood, before construction begins.",
+      "Creating high-impact, photorealistic 3D visualizations and real-time walkthroughs using Enscape, D5 Render, V-Ray, and Lumion. Translating technical design parameters into realistic lighting, realistic textures, and rich atmospheric visuals to give clients a clear, accurate look at the final space before construction begins.",
   },
 ];
 

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { createProject, updateProject, MAX_IMAGES_PER_PROJECT, type Project } from "../lib/api";
 import { upsertCachedProject } from "../lib/projectCache";
-import { uploadCoverImage, uploadImage } from "../lib/upload";
+import { uploadCoverImage, uploadGalleryImage } from "../lib/upload";
 import "./admin.css";
 
 type StagedImage = {
@@ -73,7 +73,7 @@ export function ProjectForm({ mode, project }: ProjectFormProps) {
       setImages((previous) => [...previous, { id, previewUrl, status: "uploading" }]);
 
       try {
-        const url = await uploadImage(file);
+        const url = await uploadGalleryImage(file);
         setImages((previous) =>
           previous.map((image) => (image.id === id ? { ...image, status: "done", url } : image)),
         );

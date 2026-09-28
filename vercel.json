@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.lycheaportfolio.site" }],
+      "destination": "https://lycheaportfolio.site/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/((?!api/)(?!@vite)(?!@react-refresh)(?!.*\\.[a-zA-Z0-9]+$).*)", "destination": "/index.html" }
   ]

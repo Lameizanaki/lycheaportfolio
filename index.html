@@ -37,24 +37,81 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Lychea Cheurn",
-        "alternateName": ["Cheurn Lychea", "cheurnlychea", "Lychea"],
-        "jobTitle": "Interior Designer",
-        "url": "https://lycheaportfolio.site/",
-        "image": "https://lycheaportfolio.site/icon-512.png",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Phnom Penh",
-          "addressCountry": "KH"
-        }
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://lycheaportfolio.site/#website",
+            "url": "https://lycheaportfolio.site/",
+            "name": "Lychea Cheurn — Interior Designer Portfolio",
+            "description": "Lychea Cheurn interior design portfolio: practical, buildable interiors, technical detailing, and fit-out coordination in Phnom Penh, Cambodia.",
+            "inLanguage": "en"
+          },
+          {
+            "@type": "Person",
+            "@id": "https://lycheaportfolio.site/#person",
+            "name": "Lychea Cheurn",
+            "alternateName": ["Cheurn Lychea", "cheurnlychea", "Lychea"],
+            "jobTitle": "Interior Designer",
+            "url": "https://lycheaportfolio.site/",
+            "image": "https://lycheaportfolio.site/icon-512.png",
+            "email": "lycheacheurn@gmail.com",
+            "telephone": "+85598729790",
+            "sameAs": [
+              "https://t.me/lycheacheurn",
+              "https://www.tiktok.com/@lycheacheurn"
+            ],
+            "knowsAbout": [
+              "Interior Design",
+              "Technical Detailing",
+              "Joinery & Shop Drawings",
+              "Interior Fit-Out",
+              "AutoCAD",
+              "SketchUp",
+              "3D Rendering",
+              "Material Calculation & BOQ"
+            ],
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Phnom Penh",
+              "addressCountry": "KH"
+            }
+          }
+        ]
       }
     </script>
 
-    <title>Lychea Cheurn Portfolio</title>
+    <title>Lychea Cheurn — Interior Designer Portfolio | Phnom Penh</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Prerendered semantic SEO content for search engine crawlers before JS hydration -->
+      <header>
+        <h1>Lychea Cheurn — Interior Designer Portfolio</h1>
+        <p>Practical, buildable interior design, technical detailing, joinery shop drawings, and fit-out coordination in Phnom Penh, Cambodia.</p>
+      </header>
+      <main>
+        <section>
+          <h2>About Lychea Cheurn</h2>
+          <p>Lychea Cheurn is an interior designer based in Phnom Penh, Cambodia focused on practical, buildable spaces. Specialized in connecting cabinet design, technical detailing, material selection, and production coordination from early design to handover.</p>
+        </section>
+        <section>
+          <h2>Core Capabilities & Skills</h2>
+          <ul>
+            <li><strong>Technical Detailing:</strong> Production-ready CAD drawings, AutoCAD, SketchUp Layout, custom joinery, section cuts, and fabrication specs.</li>
+            <li><strong>Interior Fit-Out Design:</strong> Space planning, functional cabinetry, material schemes, and furniture fit-out.</li>
+            <li><strong>Material Calculation:</strong> Accurate material takeoffs, Bill of Quantities (BOQ), and yield estimations.</li>
+            <li><strong>3D Visualization & Rendering:</strong> Photorealistic interior visualizations using Enscape, D5 Render, V-Ray, and Lumion.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Contact Lychea Cheurn</h2>
+          <p>Email: <a href="mailto:lycheacheurn@gmail.com">lycheacheurn@gmail.com</a></p>
+          <p>Phone: +(855) 98729790</p>
+          <p>Location: Phnom Penh, Cambodia</p>
+          <p>Telegram: <a href="https://t.me/lycheacheurn">t.me/lycheacheurn</a> | TikTok: <a href="https://www.tiktok.com/@lycheacheurn">@lycheacheurn</a></p>
+        </section>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

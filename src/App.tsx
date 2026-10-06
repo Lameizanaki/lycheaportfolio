@@ -344,6 +344,7 @@ function Hero() {
           Interior design portfolio
         </motion.p>
         <motion.h1
+          aria-label="Lychea Cheurn — Interior Design Portfolio 2026"
           initial={reduceMotion ? false : { opacity: 0, y: 34 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}

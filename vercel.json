@@ -11,6 +11,30 @@
       "has": [{ "type": "host", "value": "www.lycheaportfolio.site" }],
       "destination": "https://lycheaportfolio.site/:path*",
       "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "cheurnlychea.com" }],
+      "destination": "https://lycheaportfolio.site/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "cheurnlychea.com" }],
+      "destination": "https://lycheaportfolio.site/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.cheurnlychea.com" }],
+      "destination": "https://lycheaportfolio.site/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.cheurnlychea.com" }],
+      "destination": "https://lycheaportfolio.site/:path*",
+      "permanent": true
     }
   ],
   "rewrites": [

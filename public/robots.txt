@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://lycheaportfolio.site/sitemap.xml
+Sitemap: https://cheurnlychea.com/sitemap.xml

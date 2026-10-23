@@ -2,38 +2,38 @@
   "redirects": [
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "www.lycheaportfolio.site" }],
-      "destination": "https://lycheaportfolio.site/",
+      "has": [{ "type": "host", "value": "lycheaportfolio.site" }],
+      "destination": "https://cheurnlychea.com/",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.lycheaportfolio.site" }],
-      "destination": "https://lycheaportfolio.site/:path*",
+      "has": [{ "type": "host", "value": "lycheaportfolio.site" }],
+      "destination": "https://cheurnlychea.com/:path*",
       "permanent": true
     },
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "cheurnlychea.com" }],
-      "destination": "https://lycheaportfolio.site/",
+      "has": [{ "type": "host", "value": "www.lycheaportfolio.site" }],
+      "destination": "https://cheurnlychea.com/",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "cheurnlychea.com" }],
-      "destination": "https://lycheaportfolio.site/:path*",
+      "has": [{ "type": "host", "value": "www.lycheaportfolio.site" }],
+      "destination": "https://cheurnlychea.com/:path*",
       "permanent": true
     },
     {
       "source": "/",
       "has": [{ "type": "host", "value": "www.cheurnlychea.com" }],
-      "destination": "https://lycheaportfolio.site/",
+      "destination": "https://cheurnlychea.com/",
       "permanent": true
     },
     {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "www.cheurnlychea.com" }],
-      "destination": "https://lycheaportfolio.site/:path*",
+      "destination": "https://cheurnlychea.com/:path*",
       "permanent": true
     }
   ],

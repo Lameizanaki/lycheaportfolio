@@ -35,6 +35,18 @@
       "has": [{ "type": "host", "value": "www.cheurnlychea.com" }],
       "destination": "https://cheurnlychea.com/:path*",
       "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "lycheaportfolio.vercel.app" }],
+      "destination": "https://cheurnlychea.com/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "lycheaportfolio.vercel.app" }],
+      "destination": "https://cheurnlychea.com/:path*",
+      "permanent": true
     }
   ],
   "rewrites": [

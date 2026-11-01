@@ -7,6 +7,7 @@ import {
   type ReactNode,
   type SVGProps,
 } from "react";
+import { Link } from "react-router-dom";
 import {
   AnimatePresence,
   motion,
@@ -497,20 +498,11 @@ function Skills() {
 function Portfolio({
   projects,
   loading,
-  onOpenProject,
 }: {
   projects: Project[];
   loading: boolean;
-  onOpenProject: (project: Project) => void;
 }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
   const projectList = projects ?? [];
-
-  const scrollByPage = (direction: 1 | -1) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollBy({ left: direction * el.clientWidth, behavior: "smooth" });
-  };
 
   return (
     <section id="portfolio" className="portfolio-section section-block">
@@ -518,273 +510,51 @@ function Portfolio({
         <Reveal className="portfolio-heading">
           <h2>Projects</h2>
         </Reveal>
-
-        {projectList.length > 1 ? (
-          <div className="portfolio-scroll-buttons">
-            <button
-              className="portfolio-scroll-button"
-              type="button"
-              onClick={() => scrollByPage(-1)}
-              aria-label="Previous projects"
-            >
-              <ChevronLeft aria-hidden="true" />
-            </button>
-            <button
-              className="portfolio-scroll-button"
-              type="button"
-              onClick={() => scrollByPage(1)}
-              aria-label="More projects"
-            >
-              <ChevronRight aria-hidden="true" />
-            </button>
-          </div>
-        ) : null}
       </div>
 
-      <div className="portfolio-scroll" ref={scrollRef}>
-        <div className="portfolio-row">
-          {loading && projectList.length === 0
-            ? Array.from({ length: 4 }, (_, index) => (
-                <div className="project-card project-card--skeleton" key={index} aria-hidden="true">
-                  <div className="project-skeleton-image" />
-                  <div className="project-skeleton-title" />
-                </div>
-              ))
-            : null}
-          {projectList.map((project, i) => {
-            const hasModal = project.images.length > 0;
-            const cardImage = getProjectCardImage(project);
-            const hasThumbnail = cardImage !== project.coverImage;
+      <div className="portfolio-grid-container">
+        {loading && projectList.length === 0
+          ? Array.from({ length: 4 }, (_, index) => (
+              <div className="project-grid-card project-grid-card--skeleton" key={index} aria-hidden="true">
+                <div className="project-skeleton-tile" />
+              </div>
+            ))
+          : null}
+        {projectList.map((project, i) => {
+          const cardImage = getProjectCardImage(project);
+          const hasThumbnail = cardImage !== project.coverImage;
 
-            return (
-              <Reveal
-                key={project.id}
-                className="project-card"
-                delay={i * 0.04}
+          return (
+            <Reveal
+              key={project.id}
+              className="project-grid-card"
+              delay={i * 0.04}
+            >
+              <Link
+                to={`/projects/${project.slug}`}
+                className="project-tile-link group"
+                aria-label={`View ${project.title} project details`}
               >
-                {hasModal ? (
-                  <motion.button
-                    className="project-open"
-                    type="button"
-                    onClick={() => onOpenProject(project)}
-                    whileHover={{ y: -8 }}
-                    whileTap={{ scale: 0.985 }}
-                    aria-label={`Open ${project.title} gallery`}
-                  >
-                    <AssetImage
-                      src={cardImage}
-                      alt={project.title}
-                      className="project-image"
-                      fallbackSrc={project.coverImage}
-                      tone={i % 2 === 0 ? "sage" : "paper"}
-                      loading={hasThumbnail && i < 4 ? "eager" : "lazy"}
-                    />
-                    <span className="project-hover" aria-hidden="true">
-                      <ArrowUpRight />
-                    </span>
-                  </motion.button>
-                ) : (
-                  <motion.div className="project-static" whileHover={{ y: -4 }}>
-                    <AssetImage
-                      src={cardImage}
-                      alt={project.title}
-                      className="project-image"
-                      fallbackSrc={project.coverImage}
-                      tone={i % 2 === 0 ? "sage" : "paper"}
-                      loading={hasThumbnail && i < 4 ? "eager" : "lazy"}
-                    />
-                  </motion.div>
-                )}
-                <h3>{project.title}</h3>
-              </Reveal>
-            );
-          })}
-        </div>
+                <div className="project-tile-image-wrapper">
+                  <AssetImage
+                    src={cardImage}
+                    alt={project.title}
+                    className="project-tile-image"
+                    fallbackSrc={project.coverImage}
+                    tone={i % 2 === 0 ? "sage" : "paper"}
+                    loading={hasThumbnail && i < 4 ? "eager" : "lazy"}
+                  />
+                  {/* Gradient overlay: always visible on mobile, fades in on desktop hover */}
+                  <div className="project-tile-overlay" />
+                  {/* Title: bottom on mobile, centered on desktop hover */}
+                  <p className="project-tile-title">{project.title}</p>
+                </div>
+              </Link>
+            </Reveal>
+          );
+        })}
       </div>
     </section>
-  );
-}
-
-function PortfolioModal({
-  project,
-  onClose,
-}: {
-  project: Project | null;
-  onClose: () => void;
-}) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const reduceMotion = useReducedMotion();
-
-  const gallery: GalleryImage[] = useMemo(
-    () =>
-      project?.images.map((src, index) => ({
-        src,
-        alt: `${project.title} photo ${index + 1}`,
-        label: `Image ${index + 1}`,
-      })) ?? [],
-    [project],
-  );
-
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [project?.id]);
-
-  useEffect(() => {
-    if (!gallery.length) {
-      return;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    const galleryLength = gallery.length;
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        onClose();
-      }
-      if (event.key === "ArrowRight") {
-        setSelectedIndex((current) => (current + 1) % galleryLength);
-      }
-      if (event.key === "ArrowLeft") {
-        setSelectedIndex(
-          (current) => (current - 1 + galleryLength) % galleryLength,
-        );
-      }
-    }
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [gallery, onClose]);
-
-  if (!project || !gallery.length) {
-    return null;
-  }
-
-  const activeImage = gallery[selectedIndex];
-  const galleryLength = gallery.length;
-
-  function showPrevious() {
-    setSelectedIndex(
-      (current) => (current - 1 + galleryLength) % galleryLength,
-    );
-  }
-
-  function showNext() {
-    setSelectedIndex((current) => (current + 1) % galleryLength);
-  }
-
-  return (
-    <motion.div
-      className="modal-backdrop"
-      role="presentation"
-      initial={reduceMotion ? false : { opacity: 0 }}
-      animate={reduceMotion ? undefined : { opacity: 1 }}
-      exit={reduceMotion ? undefined : { opacity: 0 }}
-      transition={{ duration: 0.22 }}
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) {
-          onClose();
-        }
-      }}
-    >
-      <motion.section
-        className="project-modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="project-modal-title"
-        initial={reduceMotion ? false : { opacity: 0, y: 26, scale: 0.98 }}
-        animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
-        exit={reduceMotion ? undefined : { opacity: 0, y: 18, scale: 0.98 }}
-        transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="modal-header">
-          <div>
-            <h2 id="project-modal-title">{project.title}</h2>
-            <p>{project.description}</p>
-          </div>
-          <button className="icon-button" type="button" onClick={onClose} aria-label="Close gallery" title="Close">
-            <X aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="modal-stage">
-          <button
-            className="modal-arrow modal-arrow--prev"
-            type="button"
-            onClick={showPrevious}
-            aria-label="Previous image"
-            title="Previous"
-          >
-            <ChevronLeft aria-hidden="true" />
-          </button>
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeImage.src}
-              className="modal-main-image"
-              style={{ touchAction: "pan-y" }}
-              initial={reduceMotion ? false : { opacity: 0, x: 24 }}
-              animate={reduceMotion ? undefined : { opacity: 1, x: 0 }}
-              exit={reduceMotion ? undefined : { opacity: 0, x: -24 }}
-              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-              drag={galleryLength > 1 ? "x" : false}
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.7}
-              dragMomentum={false}
-              onDragEnd={(_event, info) => {
-                const swipeThreshold = 50;
-                const swipeVelocity = 400;
-                if (info.offset.x < -swipeThreshold || info.velocity.x < -swipeVelocity) {
-                  showNext();
-                } else if (info.offset.x > swipeThreshold || info.velocity.x > swipeVelocity) {
-                  showPrevious();
-                }
-              }}
-            >
-              <AssetImage
-                src={activeImage.src}
-                alt={activeImage.alt}
-                tone="paper"
-                fit="contain"
-              />
-            </motion.div>
-          </AnimatePresence>
-          <button
-            className="modal-arrow modal-arrow--next"
-            type="button"
-            onClick={showNext}
-            aria-label="Next image"
-            title="Next"
-          >
-            <ChevronRight aria-hidden="true" />
-          </button>
-        </div>
-
-        <div className="modal-footer">
-          <p>{activeImage.label}</p>
-          <div className="modal-counter">
-            {selectedIndex + 1}/{gallery.length}
-          </div>
-        </div>
-
-        <div className="modal-thumbs" aria-label={`${project.title} images`}>
-          {gallery.map((image, index) => (
-            <button
-              key={`${image.src}-${image.label}`}
-              className={index === selectedIndex ? "is-active" : ""}
-              type="button"
-              onClick={() => setSelectedIndex(index)}
-              aria-label={`Show ${image.label}`}
-            >
-              <AssetImage src={image.src} alt="" fit="cover" />
-            </button>
-          ))}
-        </div>
-      </motion.section>
-    </motion.div>
   );
 }
 
@@ -896,16 +666,15 @@ function Contact() {
 }
 
 export default function App() {
-  const [projects, setProjects] = useState<Project[]>(readCachedProjects);
-  const [projectsLoading, setProjectsLoading] = useState(projects.length === 0);
-  const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [projects, setProjects] = useState<Project[]>(() => readCachedProjects());
+  const [projectsLoading, setProjectsLoading] = useState(() => (readCachedProjects() ?? []).length === 0);
 
   useEffect(() => {
     let cancelled = false;
 
     fetchProjects()
       .then((data) => {
-        if (!cancelled) {
+        if (!cancelled && Array.isArray(data)) {
           setProjects(data);
           writeCachedProjects(data);
         }
@@ -929,17 +698,9 @@ export default function App() {
         <Hero />
         <About />
         <Skills />
-        <Portfolio projects={projects} loading={projectsLoading} onOpenProject={setActiveProject} />
+        <Portfolio projects={projects} loading={projectsLoading} />
         <Contact />
       </main>
-      <AnimatePresence>
-        {activeProject && (
-          <PortfolioModal
-            project={activeProject}
-            onClose={() => setActiveProject(null)}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }

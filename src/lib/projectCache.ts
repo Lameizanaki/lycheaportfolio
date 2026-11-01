@@ -5,7 +5,10 @@ const PROJECTS_CACHE_KEY = "lychea-projects-v1";
 export function readCachedProjects(): Project[] {
   try {
     const cached = window.localStorage.getItem(PROJECTS_CACHE_KEY);
-    const projects = cached ? JSON.parse(cached) : null;
+    if (!cached || cached === "undefined" || cached === "null") {
+      return [];
+    }
+    const projects = JSON.parse(cached);
     return Array.isArray(projects) ? projects : [];
   } catch {
     return [];
@@ -14,6 +17,9 @@ export function readCachedProjects(): Project[] {
 
 export function writeCachedProjects(projects: Project[]) {
   try {
+    if (!Array.isArray(projects)) {
+      return;
+    }
     window.localStorage.setItem(PROJECTS_CACHE_KEY, JSON.stringify(projects));
   } catch {
     // Storage can be unavailable in private browsing; network data still works.

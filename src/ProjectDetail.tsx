@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { fetchProject, fetchProjects, type Project } from "./lib/api";
 import { findCachedProject } from "./lib/projectCache";
-import { AssetImage, Reveal } from "./components/Common";
+import { AssetImage, Reveal, getProjectCardImage } from "./components/Common";
 
 type GalleryImage = {
   src: string;
@@ -157,7 +157,8 @@ export function ProjectDetail() {
                   <span>Back to Projects</span>
                 </Link>
                 <AssetImage
-                  src={project.coverImage}
+                  src={getProjectCardImage(project)}
+                  fallbackSrc={project.coverImage}
                   alt={project.title}
                   tone="paper"
                   fit="cover"

@@ -4,6 +4,20 @@ import {
   useEffect,
 } from "react";
 import { useReducedMotion, motion } from "framer-motion";
+import type { Project } from "../lib/api";
+
+const bundledCoverThumbnails = new Map([
+  ["/images/cropped/4.png", "/images/thumbnails/4.jpg"],
+  ["/images/cropped/5.png", "/images/thumbnails/5.jpg"],
+  ["/images/cropped/6.png", "/images/thumbnails/6.jpg"],
+  ["/images/cropped/7.png", "/images/thumbnails/7.jpg"],
+]);
+
+// Prefer the small generated thumbnail over the full-resolution upload,
+// which can be several MB and makes cover banners load very slowly.
+export function getProjectCardImage(project: Project) {
+  return project.coverThumbnail ?? bundledCoverThumbnails.get(project.coverImage) ?? project.coverImage;
+}
 
 export type AssetImageProps = {
   src: string;

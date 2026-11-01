@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { fetchProject, fetchProjects, type Project } from "./lib/api";
+import { findCachedProject } from "./lib/projectCache";
 import { AssetImage, Reveal } from "./components/Common";
 
 type GalleryImage = {
@@ -13,8 +14,9 @@ type GalleryImage = {
 
 export function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>();
-  const [project, setProject] = useState<Project | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Immediately initialize from cache so there is zero delay/skeleton flicker
+  const [project, setProject] = useState<Project | null>(() => slug ? findCachedProject(slug) : null);
+  const [loading, setLoading] = useState(() => !project);
   const [error, setError] = useState<string | null>(null);
   const [allProjects, setAllProjects] = useState<Project[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -27,18 +29,26 @@ export function ProjectDetail() {
   useEffect(() => {
     if (!slug) return;
     let cancelled = false;
-    setLoading(true);
+
+    // Check if already in cache
+    const cached = findCachedProject(slug);
+    if (cached) {
+      setProject(cached);
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
     setError(null);
 
     fetchProject(slug)
       .then((data) => {
-        if (!cancelled) {
+        if (!cancelled && data) {
           setProject(data);
           setSelectedIndex(0);
         }
       })
       .catch((err) => {
-        if (!cancelled) {
+        if (!cancelled && !cached) {
           setError(err?.message || "Failed to load project details.");
         }
       })
@@ -55,7 +65,7 @@ export function ProjectDetail() {
     let cancelled = false;
     fetchProjects()
       .then((list) => {
-        if (!cancelled) {
+        if (!cancelled && Array.isArray(list)) {
           setAllProjects(list);
         }
       })
@@ -69,10 +79,10 @@ export function ProjectDetail() {
   const gallery: GalleryImage[] = useMemo(() => {
     if (!project) return [];
     // If project has specific images array, use it; if empty, fallback to cover image
-    const imgs = project.images && project.images.length > 0 ? project.images : [project.coverImage];
+    const imgs = project.images && project.images.length > 0 ? project.images : (project.coverImage ? [project.coverImage] : []);
     return imgs.map((src, index) => ({
       src,
-      alt: `${project.title} photo ${index + 1}`,
+      alt: `${project.title || "Project"} photo ${index + 1}`,
       label: `Image ${index + 1}`,
     }));
   }, [project]);
@@ -107,24 +117,18 @@ export function ProjectDetail() {
 
   // Next project navigation
   const nextProject = useMemo(() => {
-    if (!allProjects.length || !project) return null;
-    const currentIndex = allProjects.findIndex((p) => p.slug === project.slug);
+    const list = allProjects ?? [];
+    if (!list.length || !project) return null;
+    const currentIndex = list.findIndex((p) => p.slug === project.slug);
     if (currentIndex === -1) return null;
-    const nextIdx = (currentIndex + 1) % allProjects.length;
-    return allProjects[nextIdx];
+    const nextIdx = (currentIndex + 1) % list.length;
+    return list[nextIdx];
   }, [allProjects, project]);
 
   const activeImage = gallery[selectedIndex];
 
   return (
     <div className="project-detail-page">
-      <header className="project-detail-header">
-        <Link to="/#portfolio" className="project-detail-back" aria-label="Back to projects">
-          <ArrowLeft aria-hidden="true" />
-          <span>Back to Projects</span>
-        </Link>
-      </header>
-
       <main className="project-detail-main">
         {loading && (
           <div className="project-detail-loading">
@@ -145,9 +149,13 @@ export function ProjectDetail() {
 
         {!loading && project && (
           <>
-            {/* Hero Section */}
+            {/* Hero Section with overlay Back button */}
             <section className="project-detail-hero">
               <div className="project-detail-hero-frame">
+                <Link to="/#portfolio" className="project-detail-back-overlay" aria-label="Back to projects">
+                  <ArrowLeft aria-hidden="true" />
+                  <span>Back to Projects</span>
+                </Link>
                 <AssetImage
                   src={project.coverImage}
                   alt={project.title}
